@@ -3,8 +3,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from time import sleep
+from datetime import datetime
 import urllib.request
 import re
+import locale
 
 options = Options()
 options.add_argument('--headless')
@@ -24,6 +26,8 @@ link_text = []
 start = idx = 20
 
 path = "http://maddawgjav.net/"
+# print(locale.getlocale(locale.LC_TIME))
+# locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
 for idx in range(start, start+1):
     if idx <= 1:
         driver.get("http://maddawgjav.net/")
@@ -33,7 +37,7 @@ for idx in range(start, start+1):
     if idx == start:
         sleep(5)
 
-    for entry in driver.find_elements_by_css_selector('.entry'):
+    for entry in driver.find_elements_by_css_selector('.hentry'):
 
         '''
         l = entry.text.splitlines()
@@ -43,13 +47,19 @@ for idx in range(start, start+1):
         else:
             print(str(l[0]))
         '''
+        for span in entry.find_elements_by_css_selector('.post-info-top'):
+            # link_text.append(driver.find_element_by_tag_name('a'))
+            str_date = span.find_element_by_tag_name('a').text
+            str_time = span.find_element_by_tag_name('a').get_attribute('title')
+            # June 29, 2018 7:42 am
+            str_datetime = str_date + ' ' + str_time
+            post_date = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
+            print(post_date)
         for a in entry.find_elements_by_css_selector('.more-link'):
             # link_text.append(driver.find_element_by_tag_name('a'))
             link_text.append(a.get_attribute('href'))
 
     idx = idx + 1
-
-# exit()
 
 for link in link_text:
     print(link)
