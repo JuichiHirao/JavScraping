@@ -23,7 +23,7 @@ driver = webdriver.Chrome()
 # sleep(5)
 
 link_text = []
-start = idx = 20
+start = idx = 2
 
 path = "http://maddawgjav.net/"
 # print(locale.getlocale(locale.LC_TIME))
@@ -39,16 +39,38 @@ for idx in range(start, start+1):
 
     for entry in driver.find_elements_by_css_selector('.hentry'):
 
-        '''
-        l = entry.text.splitlines()
-        if "チーム木村" in l[0]:
-            print("Match!!!!" + str(idx) + " : " + str(l[0]))
+        for h2 in entry.find_elements_by_tag_name('h2'):
+            print('h2 ' + h2.text)
             break
-        else:
-            print(str(l[0]))
-        '''
+
+        lines = entry.text.splitlines()
+        sell_date = ''
+        actress = ''
+        maker = ''
+        label = ''
+        for one in lines:
+            if len(one.strip()) <= 0:
+                continue
+            if "発売日" in one:
+                arr = one.split("：")
+                if len(arr) >= 2:
+                    sell_date = arr[1].strip()
+            if "出演者" in one:
+                arr = one.split("：")
+                if len(arr) >= 2:
+                    actress = arr[1].strip()
+            if "メーカー" in one:
+                arr = one.split("：")
+                if len(arr) >= 2:
+                    maker = arr[1].strip()
+            if "レーベル" in one:
+                arr = one.split("：")
+                if len(arr) >= 2:
+                    label = arr[1].strip()
+
+        print("date [" + str(sell_date) + "] actress [" + actress + "] maker [" + maker + "]  label [" + label + "]")
+
         for span in entry.find_elements_by_css_selector('.post-info-top'):
-            # link_text.append(driver.find_element_by_tag_name('a'))
             str_date = span.find_element_by_tag_name('a').text
             str_time = span.find_element_by_tag_name('a').get_attribute('title')
             # June 29, 2018 7:42 am
@@ -60,6 +82,7 @@ for idx in range(start, start+1):
             link_text.append(a.get_attribute('href'))
 
     idx = idx + 1
+exit(0)
 
 for link in link_text:
     print(link)
