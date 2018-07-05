@@ -1,11 +1,11 @@
 # coding:utf-8
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from time import sleep
 from datetime import datetime
 import urllib.request
 import re
+import jav_data
 import locale
 
 options = Options()
@@ -13,7 +13,7 @@ options.add_argument('--headless')
 
 # http://maddawgjav.net/
 # ブラウザを開く。
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(chrome_options=options)
 # Googleの検索TOP画面を開く。
 # driver.get("http://maddawgjav.net/")
 # http://maddawgjav.net/page/2/
@@ -39,47 +39,44 @@ for idx in range(start, start+1):
 
     for entry in driver.find_elements_by_css_selector('.hentry'):
 
+        jav = jav_data.JavData()
         for h2 in entry.find_elements_by_tag_name('h2'):
-            print('h2 ' + h2.text)
+            # print('h2 ' + h2.text)
+            jav.title = h2.text
             break
 
+        if bool("[VR3K]" in jav.title) or bool("[VR]" in jav.title):
+            continue
+
         lines = entry.text.splitlines()
-        sell_date = ''
-        actress = ''
-        maker = ''
-        label = ''
+
         for one in lines:
             if len(one.strip()) <= 0:
                 continue
-            if "発売日" in one:
-                arr = one.split("：")
-                if len(arr) >= 2:
-                    sell_date = arr[1].strip()
-            if "出演者" in one:
-                arr = one.split("：")
-                if len(arr) >= 2:
-                    actress = arr[1].strip()
-            if "メーカー" in one:
-                arr = one.split("：")
-                if len(arr) >= 2:
-                    maker = arr[1].strip()
-            if "レーベル" in one:
-                arr = one.split("：")
-                if len(arr) >= 2:
-                    label = arr[1].strip()
 
-        print("date [" + str(sell_date) + "] actress [" + actress + "] maker [" + maker + "]  label [" + label + "]")
+            if "発売日" in one:
+                jav.sellDate = jav.get_text(one)
+            if "出演者" in one:
+                jav.actress = jav.get_text(one)
+            if "メーカー" in one:
+                jav.maker = jav.get_text(one)
+            if "レーベル" in one:
+                jav.label = jav.get_text(one)
+
+        # print("date [" + str(sell_date) + "] actress [" + actress + "] maker [" + maker + "]  label [" + label + "]")
 
         for span in entry.find_elements_by_css_selector('.post-info-top'):
             str_date = span.find_element_by_tag_name('a').text
             str_time = span.find_element_by_tag_name('a').get_attribute('title')
             # June 29, 2018 7:42 am
             str_datetime = str_date + ' ' + str_time
-            post_date = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
-            print(post_date)
+            jav.postDate = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
+            # print(post_date)
         for a in entry.find_elements_by_css_selector('.more-link'):
-            # link_text.append(driver.find_element_by_tag_name('a'))
-            link_text.append(a.get_attribute('href'))
+            # link_text.append(a.get_attribute('href'))
+            jav.url = a.get_attribute('href')
+
+        jav.print()
 
     idx = idx + 1
 exit(0)
