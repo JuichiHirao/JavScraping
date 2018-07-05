@@ -6,6 +6,7 @@ from datetime import datetime
 import urllib.request
 import re
 import jav_data
+import db
 import locale
 
 options = Options()
@@ -23,12 +24,16 @@ driver = webdriver.Chrome(chrome_options=options)
 # sleep(5)
 
 link_text = []
-start = idx = 2
+start = idx = 1
 
 path = "http://maddawgjav.net/"
 # print(locale.getlocale(locale.LC_TIME))
 # locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
-for idx in range(start, start+1):
+
+db = db.DbMysql()
+
+end = start + 40
+for idx in range(start, end):
     if idx <= 1:
         driver.get("http://maddawgjav.net/")
     else:
@@ -41,9 +46,14 @@ for idx in range(start, start+1):
 
         jav = jav_data.JavData()
         for h2 in entry.find_elements_by_tag_name('h2'):
-            # print('h2 ' + h2.text)
             jav.title = h2.text
             break
+
+        title_exist = db.exist_title(jav.title)
+
+        if title_exist:
+            print('title exist ' + h2.text)
+            continue
 
         if bool("[VR3K]" in jav.title) or bool("[VR]" in jav.title):
             continue
@@ -55,7 +65,10 @@ for idx in range(start, start+1):
                 continue
 
             if "発売日" in one:
-                jav.sellDate = jav.get_text(one)
+                str_date = jav.get_date(one)
+                if len(str_date) > 0:
+                    jav.sellDate = jav.get_date(one)
+
             if "出演者" in one:
                 jav.actress = jav.get_text(one)
             if "メーカー" in one:
@@ -77,6 +90,8 @@ for idx in range(start, start+1):
             jav.url = a.get_attribute('href')
 
         jav.print()
+
+        db.export_jav(jav)
 
     idx = idx + 1
 exit(0)

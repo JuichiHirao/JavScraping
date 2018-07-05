@@ -1,4 +1,4 @@
-
+import re
 
 class JavData:
 
@@ -16,6 +16,15 @@ class JavData:
         self.downloadLinks = ''
         self.createdAt = None
         self.updatedAt = None
+
+    def get_date(self, line=''):
+        arr = line.split('：')
+        if len(arr) >= 2:
+            result = re.search(".*[/-].*/.*", arr[1].strip())
+            if result:
+                return arr[1].strip()
+
+        return ''
 
     def get_text(self, line=''):
         arr = line.split('：')
