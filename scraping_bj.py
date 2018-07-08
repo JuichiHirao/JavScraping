@@ -17,6 +17,7 @@ main_url = ''
 with open('site_bj.yml') as file:
     obj = yaml.load(file)
     main_url = obj['site_url']
+    stop_title = obj['stop_title']
 
 if len(main_url) <= 0:
     print('no yaml')
@@ -24,6 +25,8 @@ if len(main_url) <= 0:
 
 end = start + 2
 current_url = ''
+page_url = ''
+is_stop = False
 for idx in range(start, end):
     if idx <= 1:
         driver.get(main_url)
@@ -43,6 +46,10 @@ for idx in range(start, end):
             for a in h2.find_elements_by_tag_name('a'):
                 title_url = a.get_attribute('href')
             print(h2.text + ' ' + title_url)
+            break
+
+        if h2.text == stop_title:
+            is_stop = True
             break
 
         # <img class="alignnone size-full wp-image-49866 aligncenter" src="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610.jpg" alt="" width="1004" height="680" srcset="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610.jpg 1004w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610-300x203.jpg 300w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610-768x520.jpg 768w" sizes="(max-width: 1004px) 100vw, 1004px">
@@ -66,6 +73,10 @@ for idx in range(start, end):
                 for a in footer.find_elements_by_tag_name('a'):
                     print("POSTED IN " + a.text)
         except:
-            print("exept")
+            print("except")
+
+    if is_stop:
+        print('is stop True' + page_url)
+        break
 
     idx = idx + 1
