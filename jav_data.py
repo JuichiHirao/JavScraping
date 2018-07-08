@@ -1,5 +1,6 @@
 import re
 
+
 class JavData:
 
     def __init__(self):
@@ -42,3 +43,28 @@ class JavData:
         print('  post    [' + str(self.postDate) + ']')
         print('  url     [' + self.url + ']')
         print(' ')
+
+
+class BjData:
+
+    def __init__(self):
+        self.id = -1
+        self.title = ''
+        self.postDate = None
+        self.thumbnails = ''
+        self.thumbnailsCount = 0
+        self.downloadLink = ''
+        self.url = ''
+        self.postedIn = ''
+        self.createdAt = None
+        self.updatedAt = None
+
+    def print(self):
+        print('【' + self.title + '】')
+        print('  post_data     [' + str(self.postDate) + ']')
+        print('  th count      [' + str(self.thumbnailsCount) + '] ' + self.thumbnails)
+        print('  download_link [' + self.downloadLink + ']')
+        print('  posted_in     [' + self.postedIn + ']')
+        print('  url           [' + self.url + ']')
+        print(' ')
+

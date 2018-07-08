@@ -50,7 +50,7 @@ for idx in range(start, end):
             jav.title = h2.text
             break
 
-        title_exist = db.exist_title(jav.title)
+        title_exist = db.exist_title(jav.title, 'jav')
 
         if title_exist:
             is_exist = True
