@@ -25,3 +25,6 @@ CREATE TRIGGER ins_jav BEFORE INSERT ON jav
 DROP TRIGGER upd_jav;
 CREATE TRIGGER upd_jav BEFORE UPDATE ON jav
     FOR EACH ROW SET NEW.updated_at = now();
+
+ALTER TABLE jav ADD is_selection TINYINT DEFAULT 0 AFTER url;
+ALTER TABLE jav DROP is_selection;
