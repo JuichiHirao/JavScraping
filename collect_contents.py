@@ -47,11 +47,19 @@ for jav in javs:
 
     for e in driver.find_elements_by_css_selector('.entry'):
 
-        img_url = e.find_element_by_css_selector('.alignnone').get_attribute('src')
+        img_url = ''
+        try:
+            img_url = e.find_element_by_css_selector('.alignnone').get_attribute('src')
+        except:
+            img_url = e.find_element_by_css_selector('.aligncenter').get_attribute('src')
+
+        if len(img_url) <= 0:
+            print("error img " + img_url)
+            continue
         print("img " + img_url)
         filename = img_url[img_url.rfind("/") + 1:]
         pathname = os.path.join(jpeg_path, filename)
-        urllib.request.urlretrieve(e.find_element_by_css_selector('.alignnone').get_attribute('src'), pathname)
+        urllib.request.urlretrieve(img_url, pathname)
         jav.package = filename
         # print('a tag ' + e.find_element_by_tag_name('a').text)
 
