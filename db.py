@@ -76,6 +76,38 @@ class DbMysql:
 
         return javs
 
+    def get_url_bjs(self):
+
+        sql = 'SELECT id, thumbnails FROM bj WHERE is_downloads IS NULL OR is_downloads = 0 ORDER BY post_date'
+
+        self.cursor.execute(sql)
+
+        # rowcountは戻りがあっても、正しい件数を取得出来ない
+        # rowcount = self.cursor.rowcount
+        rs = self.cursor.fetchall()
+
+        bjs = []
+        for row in rs:
+            bj = jav_data.BjData()
+            bj.id = row[0]
+            bj.thumbnails = row[1]
+            bjs.append(bj)
+
+        self.conn.commit()
+
+        return bjs
+
+    def update_bj(self, bjData):
+
+        sql = 'UPDATE bj ' \
+                '  SET is_downloads = %s ' \
+                '  WHERE id = %s'
+
+        self.cursor.execute(sql, (bjData.isDownloads, bjData.id))
+        print("bj isDownloads update id [" + str(bjData.id) + "]")
+
+        self.conn.commit()
+
     def update_jav(self, javData):
 
         sql = 'UPDATE jav ' \

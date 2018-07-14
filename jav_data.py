@@ -56,6 +56,8 @@ class BjData:
         self.downloadLink = ''
         self.url = ''
         self.postedIn = ''
+        self.isDownloads = 0
+        self.isSelection = 0
         self.createdAt = None
         self.updatedAt = None
 
