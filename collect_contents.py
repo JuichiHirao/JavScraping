@@ -51,7 +51,10 @@ for jav in javs:
         try:
             img_url = e.find_element_by_css_selector('.alignnone').get_attribute('src')
         except:
-            img_url = e.find_element_by_css_selector('.aligncenter').get_attribute('src')
+            try:
+                img_url = e.find_element_by_css_selector('.aligncenter').get_attribute('src')
+            except:
+                img_url = e.find_element_by_tag_name('img').get_attribute('src')
 
         if len(img_url) <= 0:
             print("error img " + img_url)
