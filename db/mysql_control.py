@@ -1,7 +1,7 @@
 import yaml
 import mysql.connector
-import jav_data
-import time
+from data import site_data
+
 
 class DbMysql:
 
@@ -34,7 +34,7 @@ class DbMysql:
             self.dbname = obj['dbname']
 
         return mysql.connector.connect(user=self.user, password=self.password,
-                                            host=self.hostname, database=self.dbname)
+                                       host=self.hostname, database=self.dbname)
 
     def exist_title(self, title, table_name):
         sql = 'SELECT title FROM ' + table_name + ' WHERE title = %s '
@@ -58,6 +58,7 @@ class DbMysql:
     def get_url_javs(self):
 
         sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
+        # sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL AND id = 1884 ORDER BY post_date desc'
 
         self.cursor.execute(sql)
 
@@ -67,7 +68,7 @@ class DbMysql:
 
         javs = []
         for row in rs:
-            jav = jav_data.JavData()
+            jav = site_data.JavData()
             jav.id = row[0]
             jav.url = row[1]
             javs.append(jav)
@@ -88,7 +89,7 @@ class DbMysql:
 
         bjs = []
         for row in rs:
-            bj = jav_data.BjData()
+            bj = site_data.BjData()
             bj.id = row[0]
             bj.thumbnails = row[1]
             bjs.append(bj)
