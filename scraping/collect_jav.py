@@ -15,6 +15,26 @@ class PageData:
         self.thumbnail_links = []
         self.movie_links = []
 
+    def get_package_links(self):
+        join_link = ''
+        for idx, link in enumerate(self.package_links):
+            if idx == 0:
+                join_link = link[link.rfind("/") + 1:]
+            else:
+                join_link = join_link + ' ' + link[link.rfind("/") + 1:]
+
+        return join_link
+
+    def get_thumbnail_links(self):
+        join_link = ''
+        for idx, link in enumerate(self.thumbnail_links):
+            if idx == 0:
+                join_link = link[link.rfind("/") + 1:]
+            else:
+                join_link = join_link + ' ' + link[link.rfind("/") + 1:]
+
+        return join_link
+
     def print(self):
         if len(self.package_links) >= 1:
             print('package')
@@ -62,14 +82,16 @@ class CollectJav:
                 page_data = self.__parse_links(e)
 
                 if self.__download_package(page_data.package_links):
-                    jav.package = page_data.package_links[0]
+                    jav.package = page_data.get_package_links()
                 else:
                     print('  package image error')
 
                 if self.__download_thumbnails(page_data.thumbnail_links):
-                    jav.thumbnail = ' '.join(page_data.thumbnail_links)
+                    jav.thumbnail = page_data.get_thumbnail_links()
                 else:
                     print('  thumbnail image error')
+
+                jav.downloadLinks = ' '.join(page_data.movie_links)
 
                 self.db.update_jav(jav)
 
