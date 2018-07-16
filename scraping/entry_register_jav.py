@@ -92,7 +92,7 @@ class EntryRegisterJav:
                 self.db.export_jav(jav)
 
             if is_exist:
-                print('end2 page ' + idx)
+                print('end2 page ' + str(idx))
                 break
 
             idx = idx + 1
