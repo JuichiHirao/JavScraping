@@ -45,6 +45,17 @@ class JavData:
         print(' ')
 
 
+class Jav2Data:
+
+    def __init__(self):
+        self.id = -1
+        self.title = ''
+        self.downloadLinks = ''
+        self.kind = ''
+        self.createdAt = None
+        self.updatedAt = None
+
+
 class BjData:
 
     def __init__(self):

@@ -57,6 +57,7 @@ class DbMysql:
 
     def get_url_javs(self):
 
+        # sql = 'SELECT id, url FROM jav WHERE download_links = "" ORDER BY post_date'
         sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
         # sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL AND id = 1884 ORDER BY post_date desc'
 
@@ -132,6 +133,15 @@ class DbMysql:
                             , javData.sellDate, javData.actress
                             , javData.maker, javData.label
                             , javData.url))
+
+        self.conn.commit()
+
+    def export_jav2(self, jav2Data):
+
+        sql = 'INSERT INTO jav2 (title, download_links, kind)' \
+                ' VALUES(%s, %s, %s)'
+
+        self.cursor.execute(sql, (jav2Data.title, jav2Data.downloadLinks, jav2Data.kind))
 
         self.conn.commit()
 
