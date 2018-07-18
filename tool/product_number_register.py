@@ -5,50 +5,46 @@ import re
 class ProductNumberRegister:
 
     def __init__(self):
-
-        self.javs = []
         self.makers = []
 
         self.db = mysql_control.DbMysql()
-        self.javs = self.db.get_range_javs(0, 3000)
-        # self.javs = self.db.get_range_javs(1200, 1210)
         self.makers = self.db.get_movie_maker()
 
-        # for idx, maker in enumerate(self.makers):
-        #     if idx > 10:
-        #         break
-        #     print(maker.print())
+    def parse(self, title):
+        match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]* ', title)
 
-    def parse(self):
+        p_number = ''
+        if match:
+            p_number = match.group().strip()
+        else:
+            for maker in self.makers:
+                if len(maker.matchStr) <= 0:
+                    continue
 
-        for jav in self.javs:
+                if re.search(maker.matchStr, title):
+                    m = re.search(maker.matchProductNumber, title)
+                    if m:
+                        p_number = m.group()
+                if re.search('FC2 ', title):
+                    m = re.search('[0-9]{6}', title)
+                    if m:
+                        p_number = m.group()
 
-            match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]* ', jav.title)
+        # print(p_number + ' ' + title)
 
-            p_number = ''
-            if match:
-                p_number = match.group().strip()
-            else:
-                for maker in self.makers:
-                    if len(maker.matchStr) <= 0:
-                        continue
+        return p_number
 
-                    if re.search(maker.matchStr, jav.title):
-                        m = re.search(maker.matchProductNumber, jav.title)
-                        if m:
-                            p_number = m.group()
-                    if re.search('FC2 ', jav.title):
-                        m = re.search('[0-9]{6}', jav.title)
-                        if m:
-                            p_number = m.group()
+    def batch(self):
 
-            print(p_number + ' ' + jav.title)
+        javs = self.db.get_javs_nothing_product_number()
+        for jav in javs:
+
+            p_number = self.parse(jav.title)
 
             if len(p_number) > 0:
                 self.db.update_jav_product_number(jav.id, p_number)
 
 
-
 if __name__ == '__main__':
     p_register = ProductNumberRegister()
-    p_register.parse()
+    p_register.batch()

@@ -103,9 +103,15 @@ class DbMysql:
 
         return makers
 
-    def get_range_javs(self, start, end):
+    def get_javs_nothing_product_number(self):
 
-        sql = 'SELECT id, title, post_date, thumbnail, sell_date, actress, maker, label, download_links, url, is_selection, created_at, updated_at FROM jav WHERE product_number IS NULL or LENGTH(product_number) <= 0 ORDER BY post_date'
+        sql = 'SELECT id, title, post_date' \
+                '  , thumbnail, sell_date, actress, maker ' \
+                '  , label, download_links, url, is_selection' \
+                '  , created_at, updated_at ' \
+                '  FROM jav ' \
+                '  WHERE product_number IS NULL or LENGTH(product_number) <= 0 ' \
+                '  ORDER BY post_date'
 
         self.cursor.execute(sql)
 
@@ -192,13 +198,13 @@ class DbMysql:
     def export_jav(self, javData):
 
         sql = 'INSERT INTO jav (title, post_date ' \
-                ', sell_date, actress, maker, label, url) ' \
-                ' VALUES(%s, %s, %s, %s, %s, %s, %s)'
+                ', sell_date, actress, maker, label, url, product_number) ' \
+                ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s)'
 
         self.cursor.execute(sql, (javData.title, javData.postDate
                             , javData.sellDate, javData.actress
                             , javData.maker, javData.label
-                            , javData.url))
+                            , javData.url, javData.productNumber))
 
         self.conn.commit()
 

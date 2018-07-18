@@ -38,12 +38,13 @@ class JavData:
 
     def print(self):
         print('【' + self.title + '】')
-        print('  date    [' + str(self.sellDate) + ']')
-        print('  actress [' + self.actress + ']')
-        print('  maker   [' + self.maker + ']')
-        print('  label   [' + self.label + ']')
-        print('  post    [' + str(self.postDate) + ']')
-        print('  url     [' + self.url + ']')
+        print('  date     [' + str(self.sellDate) + ']')
+        print('  actress  [' + self.actress + ']')
+        print('  maker    [' + self.maker + ']')
+        print('  label    [' + self.label + ']')
+        print('  post     [' + str(self.postDate) + ']')
+        print('  url      [' + self.url + ']')
+        print('  p_number [' + self.productNumber + ']')
         print(' ')
 
 

@@ -5,6 +5,7 @@ from time import sleep
 from datetime import datetime
 from db import mysql_control
 from data import site_data
+from tool import product_number_register
 
 
 class EntryRegisterJav:
@@ -23,6 +24,7 @@ class EntryRegisterJav:
 
     def register_page(self):
 
+        product_number_tool = product_number_register.ProductNumberRegister()
         start = idx = 1
         end = start + 20
 
@@ -87,6 +89,7 @@ class EntryRegisterJav:
                 for a in entry.find_elements_by_css_selector('.more-link'):
                     jav.url = a.get_attribute('href')
 
+                jav.productNumber = product_number_tool.parse(jav.title)
                 jav.print()
 
                 self.db.export_jav(jav)
