@@ -22,21 +22,21 @@ class EntryRegisterJav2:
     def main(self):
 
         idx = start = 1
-        end = start + 3
+        end = start + 5
 
-        # sub_url = 'category/av-censored/'
-        # sub_url = 'category/av-uncensored/'
-        sub_url = 'category/av-idols/'
-        for idx in range(start, end):
+        sub_urls = ['category/av-censored/', 'category/av-uncensored/', 'category/av-idols/']
+        for sub_url in sub_urls:
+            # sub_url = 'category/av-idols/'
+            for idx in range(start, end):
 
-            if idx == 1:
-                url = self.main_url + sub_url
-            else:
-                url = self.main_url + sub_url + 'page/' + str(idx)
+                if idx == 1:
+                    url = self.main_url + sub_url
+                else:
+                    url = self.main_url + sub_url + 'page/' + str(idx)
 
-            self.register_download_url(url, sub_url)
+                self.register_download_url(url, sub_url)
 
-            idx = idx + 1
+                idx = idx + 1
 
     def register_download_url(self, main_url, sub_url):
 
