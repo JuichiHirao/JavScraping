@@ -15,6 +15,8 @@ class JavData:
         self.maker = ''
         self.label = ''
         self.downloadLinks = ''
+        self.productNumber = ''
+        self.isSelection = False
         self.createdAt = None
         self.updatedAt = None
 
@@ -80,4 +82,27 @@ class BjData:
         print('  posted_in     [' + self.postedIn + ']')
         print('  url           [' + self.url + ']')
         print(' ')
+
+
+class MovieMakerData:
+
+    def __init__(self):
+        self.id = -1
+        self.name = ''
+        self.label = ''
+        self.kind = 0
+        self.matchStr = ''
+        self.matchProductNumber = ''
+        self.createdAt = None
+        self.updatedAt = None
+
+    def print(self):
+        print('【' + self.name + ':' + self.label + '】')
+        print('  kind    [' + str(self.kind) + ']')
+        print('  match   [' + self.matchStr + ']')
+        print('  match_p [' + self.matchProductNumber + ']')
+        print('  created [' + str(self.createdAt) + ']')
+        print('  updated [' + str(self.updatedAt) + ']')
+        print(' ')
+
 
