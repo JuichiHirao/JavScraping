@@ -56,3 +56,25 @@ DROP TRIGGER upd_bj;
 CREATE TRIGGER upd_bj BEFORE UPDATE ON bj
     FOR EACH ROW SET NEW.updated_at = now();
 
+CREATE TABLE jav2 (
+  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+  title TEXT,
+  download_links TEXT,
+  kind VARCHAR(64),
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+DROP TRIGGER ins_jav2;
+
+CREATE TRIGGER ins_jav2 BEFORE INSERT ON jav2
+    FOR EACH ROW SET NEW.created_at = now();
+
+DROP TRIGGER upd_jav2;
+CREATE TRIGGER upd_jav2 BEFORE UPDATE ON jav2
+    FOR EACH ROW SET NEW.updated_at = now();
+
+ALTER TABLE jav ADD product_number VARCHAR(255) AFTER url;
+-- ALTER TABLE jav DROP is_selection;
+

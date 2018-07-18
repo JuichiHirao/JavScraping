@@ -57,8 +57,9 @@ class DbMysql:
 
     def get_url_javs(self):
 
-        sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
+        # sql = 'SELECT id, url FROM jav WHERE download_links = "" ORDER BY post_date'
         # sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL AND id = 1884 ORDER BY post_date desc'
+        sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
 
         self.cursor.execute(sql)
 
@@ -71,6 +72,67 @@ class DbMysql:
             jav = site_data.JavData()
             jav.id = row[0]
             jav.url = row[1]
+            javs.append(jav)
+
+        self.conn.commit()
+
+        return javs
+
+    def get_movie_maker(self):
+
+        sql = 'SELECT id, name, label, kind, match_str, match_product_number, created_at, updated_at FROM movie_makers ORDER BY id'
+
+        self.cursor.execute(sql)
+
+        rs = self.cursor.fetchall()
+
+        makers = []
+        for row in rs:
+            maker = site_data.MovieMakerData()
+            maker.id = row[0]
+            maker.name = row[1]
+            maker.label = row[2]
+            maker.kind = row[3]
+            maker.matchStr = row[4]
+            maker.matchProductNumber = row[5]
+            maker.createdAt = row[6]
+            maker.updatedAt = row[7]
+            makers.append(maker)
+
+        self.conn.commit()
+
+        return makers
+
+    def get_javs_nothing_product_number(self):
+
+        sql = 'SELECT id, title, post_date' \
+                '  , thumbnail, sell_date, actress, maker ' \
+                '  , label, download_links, url, is_selection' \
+                '  , created_at, updated_at ' \
+                '  FROM jav ' \
+                '  WHERE product_number IS NULL or LENGTH(product_number) <= 0 ' \
+                '  ORDER BY post_date'
+
+        self.cursor.execute(sql)
+
+        rs = self.cursor.fetchall()
+
+        javs = []
+        for row in rs:
+            jav = site_data.JavData()
+            jav.id = row[0]
+            jav.title = row[1]
+            jav.postDate = row[2]
+            jav.thumbnail = row[3]
+            jav.sellDate = row[4]
+            jav.actress = row[5]
+            jav.maker = row[6]
+            jav.label = row[7]
+            jav.downloadLinks = row[8]
+            jav.url = row[9]
+            jav.isSelection = row[10]
+            jav.createdAt = row[11]
+            jav.updatedAt = row[12]
             javs.append(jav)
 
         self.conn.commit()
@@ -109,6 +171,17 @@ class DbMysql:
 
         self.conn.commit()
 
+    def update_jav_product_number(self, id, product_number):
+
+        sql = 'UPDATE jav ' \
+                '  SET product_number = %s ' \
+                '  WHERE id = %s'
+
+        self.cursor.execute(sql, (product_number, id))
+        print("jav update id [" + str(id) + "]")
+
+        self.conn.commit()
+
     def update_jav(self, javData):
 
         sql = 'UPDATE jav ' \
@@ -125,13 +198,22 @@ class DbMysql:
     def export_jav(self, javData):
 
         sql = 'INSERT INTO jav (title, post_date ' \
-                ', sell_date, actress, maker, label, url) ' \
-                ' VALUES(%s, %s, %s, %s, %s, %s, %s)'
+                ', sell_date, actress, maker, label, url, product_number) ' \
+                ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s)'
 
         self.cursor.execute(sql, (javData.title, javData.postDate
                             , javData.sellDate, javData.actress
                             , javData.maker, javData.label
-                            , javData.url))
+                            , javData.url, javData.productNumber))
+
+        self.conn.commit()
+
+    def export_jav2(self, jav2Data):
+
+        sql = 'INSERT INTO jav2 (title, download_links, kind)' \
+                ' VALUES(%s, %s, %s)'
+
+        self.cursor.execute(sql, (jav2Data.title, jav2Data.downloadLinks, jav2Data.kind))
 
         self.conn.commit()
 
