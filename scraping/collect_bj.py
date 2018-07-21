@@ -1,19 +1,18 @@
 # coding:utf-8
 import urllib.request
-import db
+from db import mysql_control
 import os
-import scraping
 
 
-class CollectBj:
+class CollectImageBj:
 
     def __init__(self):
 
         self.store_path = "/Users/juichihirao/bj-jpeg"
 
-        self.db = db.DbMysql()
+        self.db = mysql_control.DbMysql()
 
-        self.bjs = db.get_url_bjs()
+        self.bjs = self.db.get_url_bjs()
 
     def get_images(self):
 
@@ -34,9 +33,9 @@ class CollectBj:
                 print(str(result))
 
             bj.isDownloads = 1
-            db.update_bj(bj)
+            self.db.update_bj(bj)
 
 
 if __name__ == '__main__':
-    collect_bj = scraping.CollectImageBj()
-    collect_bj.execute()
+    collect_bj = CollectImageBj()
+    collect_bj.get_images()
