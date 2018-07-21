@@ -8,7 +8,7 @@ class CollectImageBj:
 
     def __init__(self):
 
-        self.store_path = "/Users/juichihirao/bj-jpeg"
+        self.store_path = "D:\\DATA\\bj-jpeg"
 
         self.db = mysql_control.DbMysql()
 

@@ -15,7 +15,7 @@ class EntryRegisterBj:
 
         options = Options()
         options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
 
         with open('site_bj.yml') as file:
             obj = yaml.load(file)

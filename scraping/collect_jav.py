@@ -58,10 +58,11 @@ class CollectJav:
         # http://maddawgjav.net/page/2/
         options = Options()
         options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
+        # self.driver = webdriver.Chrome(chrome_options=options)
 
         self.path = "http://maddawgjav.net/"
-        self.store_path = "/Users/juichihirao/jav-jpeg"
+        self.store_path = "D:\DATA\jav-save"
 
         self.db = mysql_control.DbMysql()
 
