@@ -55,6 +55,8 @@ class Jav2Data:
         self.title = ''
         self.downloadLinks = ''
         self.kind = ''
+        self.url = ''
+        self.detail = ''
         self.createdAt = None
         self.updatedAt = None
 

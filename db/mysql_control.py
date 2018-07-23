@@ -36,6 +36,25 @@ class DbMysql:
         return mysql.connector.connect(user=self.user, password=self.password,
                                        host=self.hostname, database=self.dbname)
 
+    def exist_title_and_kind(self, title, kind, table_name):
+        sql = 'SELECT title FROM ' + table_name + ' WHERE title = %s and kind = %s'
+
+        self.cursor.execute(sql, (title, kind, ))
+        # rowcountは戻りがあっても、正しい件数を取得出来ない
+        # rowcount = self.cursor.rowcount
+        rs = self.cursor.fetchall()
+
+        exist_flag = False
+
+        if rs is not None:
+            for row in rs:
+                exist_flag = True
+                break
+
+        self.conn.commit()
+
+        return exist_flag
+
     def exist_title(self, title, table_name):
         sql = 'SELECT title FROM ' + table_name + ' WHERE title = %s '
 
@@ -210,10 +229,10 @@ class DbMysql:
 
     def export_jav2(self, jav2Data):
 
-        sql = 'INSERT INTO jav2 (title, download_links, kind)' \
-                ' VALUES(%s, %s, %s)'
+        sql = 'INSERT INTO jav2 (title, download_links, kind, url, detail)' \
+                ' VALUES(%s, %s, %s, %s, %s)'
 
-        self.cursor.execute(sql, (jav2Data.title, jav2Data.downloadLinks, jav2Data.kind))
+        self.cursor.execute(sql, (jav2Data.title, jav2Data.downloadLinks, jav2Data.kind, jav2Data.url, jav2Data.detail))
 
         self.conn.commit()
 
