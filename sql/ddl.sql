@@ -76,5 +76,8 @@ CREATE TRIGGER upd_jav2 BEFORE UPDATE ON jav2
     FOR EACH ROW SET NEW.updated_at = now();
 
 ALTER TABLE jav ADD product_number VARCHAR(255) AFTER url;
+ALTER TABLE jav2 ADD url TEXT AFTER kind;
+ALTER TABLE jav2 ADD detail TEXT AFTER url;
 -- ALTER TABLE jav DROP is_selection;
 
+ALTER TABLE jav ADD name TEXT AFTER title;
