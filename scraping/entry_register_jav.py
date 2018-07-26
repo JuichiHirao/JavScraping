@@ -44,6 +44,9 @@ class EntryRegisterJav:
                 jav = site_data.JavData()
                 for h2 in entry.find_elements_by_tag_name('h2'):
                     jav.title = h2.text
+                    for a in h2.find_elements_by_tag_name('a'):
+                        jav.url = a.get_attribute('href')
+                    # print(jav.url)
                     break
 
                 title_exist = self.db.exist_title(jav.title, 'jav')
@@ -86,8 +89,9 @@ class EntryRegisterJav:
                     str_datetime = str_date + ' ' + str_time
                     jav.postDate = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
                     # print(post_date)
-                for a in entry.find_elements_by_css_selector('.more-link'):
-                    jav.url = a.get_attribute('href')
+
+                # for a in entry.find_elements_by_css_selector('.more-link'):
+                #     jav.url = a.get_attribute('href')
 
                 jav.productNumber = product_number_tool.parse(jav.title)
                 jav.print()

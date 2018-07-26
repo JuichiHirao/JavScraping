@@ -72,11 +72,11 @@ class CollectJav:
         javs = self.db.get_url_javs()
 
         for jav in javs:
-            print(str(idx) + '/' + str(len(javs)) + ' ' + jav.url)
+            print(str(idx) + '/' + str(len(javs)) + ' ' + jav.url + jav.productNumber)
             self.driver.get(str(jav.url))
 
             if idx == start:
-                sleep(5)
+                sleep(6)
 
             for e in self.driver.find_elements_by_css_selector('.entry'):
                 page_data = self.__parse_links(e)
