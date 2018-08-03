@@ -81,3 +81,7 @@ ALTER TABLE jav2 ADD detail TEXT AFTER url;
 -- ALTER TABLE jav DROP is_selection;
 
 ALTER TABLE jav ADD name TEXT AFTER title;
+
+ALTER TABLE jav MODIFY thumbnail text;
+
+ALTER TABLE jav ADD rating integer default 0 AFTER is_selection;

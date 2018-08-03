@@ -11,7 +11,7 @@ class ProductNumberRegister:
         self.makers = self.db.get_movie_maker()
 
     def parse(self, title):
-        match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]* ', title)
+        match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]*', title)
 
         p_number = ''
         if match:
@@ -22,15 +22,17 @@ class ProductNumberRegister:
                     continue
 
                 if re.search(maker.matchStr, title):
-                    m = re.search(maker.matchProductNumber, title)
+                    # print('match ' + p_number + ' ' + maker.name + ' ' + maker.matchStr)
+                    m = re.search(maker.matchProductNumber, title, flags=re.IGNORECASE)
                     if m:
-                        p_number = m.group()
+                        if len(str(m.group())) > 0:
+                            p_number = m.group()
                 if re.search('FC2 ', title):
                     m = re.search('[0-9]{6}', title)
                     if m:
                         p_number = m.group()
 
-        # print(p_number + ' ' + title)
+        # print('[' + p_number + '] ' + title)
 
         return p_number
 
