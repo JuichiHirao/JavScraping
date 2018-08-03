@@ -76,9 +76,8 @@ class DbMysql:
 
     def get_url_javs(self):
 
-        # sql = 'SELECT id, url FROM jav WHERE download_links = "" ORDER BY post_date'
-        # sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL AND id = 1884 ORDER BY post_date desc'
         sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
+        # sql = 'SELECT id, url FROM jav WHERE thumbnail = "" ORDER BY post_date'
 
         self.cursor.execute(sql)
 
@@ -122,19 +121,17 @@ class DbMysql:
 
         return makers
 
-    def get_javs_nothing_product_number(self):
-
+    def __get_sql_select(self):
         sql = 'SELECT id, title, post_date' \
                 '  , thumbnail, sell_date, actress, maker ' \
                 '  , label, download_links, url, is_selection' \
+                '  , product_number ' \
                 '  , created_at, updated_at ' \
-                '  FROM jav ' \
-                '  WHERE product_number IS NULL or LENGTH(product_number) <= 0 ' \
-                '  ORDER BY post_date'
+                '  FROM jav '
 
-        self.cursor.execute(sql)
+        return sql
 
-        rs = self.cursor.fetchall()
+    def __get_list(self, rs):
 
         javs = []
         for row in rs:
@@ -150,11 +147,52 @@ class DbMysql:
             jav.downloadLinks = row[8]
             jav.url = row[9]
             jav.isSelection = row[10]
-            jav.createdAt = row[11]
-            jav.updatedAt = row[12]
+            jav.productNumber = row[11]
+            jav.createdAt = row[12]
+            jav.updatedAt = row[13]
             javs.append(jav)
 
-        self.conn.commit()
+        return javs
+
+    def get_jav_by_id(self, id):
+
+        sql = self.__get_sql_select()
+        sql = sql + '  WHERE id = %s ' \
+                    '  ORDER BY post_date'
+
+        self.cursor.execute(sql, (id, ))
+
+        rs = self.cursor.fetchall()
+
+        javs = self.__get_list(rs)
+
+        if javs is None or len(javs) <= 0:
+            return None
+
+        return javs[0]
+
+    def get_javs_nothing_product_number(self):
+
+        sql = self.__get_sql_select()
+        sql = sql + '  WHERE product_number IS NULL or LENGTH(product_number) <= 0 ' \
+                    '  ORDER BY post_date'
+
+        self.cursor.execute(sql)
+        rs = self.cursor.fetchall()
+
+        javs = self.__get_list(rs)
+
+        return javs
+
+    def get_javs_all(self):
+
+        sql = self.__get_sql_select()
+        sql = sql + '  ORDER BY post_date'
+
+        self.cursor.execute(sql)
+        rs = self.cursor.fetchall()
+
+        javs = self.__get_list(rs)
 
         return javs
 
@@ -210,6 +248,17 @@ class DbMysql:
                 '  WHERE id = %s'
 
         self.cursor.execute(sql, (javData.package, javData.thumbnail, javData.downloadLinks, javData.id))
+        print("jav update id [" + str(javData.id) + "]")
+
+        self.conn.commit()
+
+    def update_jav2(self, javData):
+
+        sql = 'UPDATE jav ' \
+                '  SET product_number = %s ' \
+                '  WHERE id = %s'
+
+        self.cursor.execute(sql, (javData.productNumber, javData.id))
         print("jav update id [" + str(javData.id) + "]")
 
         self.conn.commit()
