@@ -28,12 +28,13 @@ class TestEntryRegisterJav:
         product_number_tool = product_number_register.ProductNumberRegister()
         for jav in javs:
             before_p = jav.productNumber
-            jav.productNumber = product_number_tool.parse(jav.title)
+            # jav.productNumber = product_number_tool.parse(jav.title)
+            jav.productNumber = product_number_tool.parse2(jav)
 
             if before_p == jav.productNumber:
                 continue
 
-            print(str(before_p) + ' -> ' + str(jav.productNumber.strip()) + '    ' + jav.title)
+            # print(str(before_p) + ' -> ' + str(jav.productNumber.strip()) + '    ' + jav.title)
 
             # if len(jav.productNumber) <= 0:
             #     filename = jav.downloadLinks.split(' ')[0].split('/')[-1]
