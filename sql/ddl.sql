@@ -28,7 +28,19 @@ CREATE TRIGGER upd_jav BEFORE UPDATE ON jav
     FOR EACH ROW SET NEW.updated_at = now();
 
 ALTER TABLE jav ADD is_selection TINYINT DEFAULT 0 AFTER url;
+-- is_site 1 更新完了
+ALTER TABLE jav ADD is_site TINYINT DEFAULT 0 AFTER rating;
 ALTER TABLE jav DROP is_selection;
+-- is_parse2 1 結果 OK
+ALTER TABLE jav ADD is_parse2 TINYINT DEFAULT 0 AFTER rating;
+ALTER TABLE jav ADD makers_id MEDIUMINT DEFAULT 0 AFTER is_site;
+
+ALTER TABLE movie_makers ADD site_kind TINYINT DEFAULT 0 AFTER match_product_number;
+ALTER TABLE movie_makers ADD match_name TEXT AFTER name;
+ALTER TABLE movie_makers ADD registered_by TEXT AFTER site_kind;
+
+UPDATE movie_makers SET movie_makers.match_name = name;
+UPDATE movie_makers SET movie_makers.registered_by = 'IMPORT';
 
 DROP TABLE bj;
 CREATE TABLE bj (
@@ -85,3 +97,12 @@ ALTER TABLE jav ADD name TEXT AFTER title;
 ALTER TABLE jav MODIFY thumbnail text;
 
 ALTER TABLE jav ADD rating integer default 0 AFTER is_selection;
+
+SELECT id, title, maker, label, product_number, is_selection, is_site, is_parse2  FROM jav WHERE jav.is_parse2 < 0;
+
+-- -3 メーカには複数一致、製品番号に一致しない ID [' + str(jav.id) + '] jav [' + jav.maker + ':' + jav.label + ']' + '  maker [' + find_list_maker[0].name + ']' + jav.title)
+
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' )
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' )
