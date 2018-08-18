@@ -19,19 +19,32 @@ class TestEntryRegisterJav:
         # self.main_url = "http://maddawgjav.net/"
 
         self.db = mysql_control.DbMysql()
-        self.is_check = True
+        # self.is_check = True
+        self.is_check = False
 
     def test_parse_product_number(self):
         # javs = self.db.get_javs_nothing_product_number()
         javs = self.db.get_javs_all()
 
         product_number_tool = product_number_register.ProductNumberRegister()
+        idx = 0
         for jav in javs:
+
+            if jav.isSite > 0 or jav.isParse2 > 0:
+                continue
             before_p = jav.productNumber
-            # jav.productNumber = product_number_tool.parse(jav.title)
-            jav.productNumber = product_number_tool.parse2(jav)
+            jav.productNumber, seller, sell_date = product_number_tool.parse2(jav, self.is_check)
+
+            if jav.isSite == 0 and len(seller) > 0:
+                sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
+                if not self.is_check:
+                    self.db.update_jav_label_selldate(seller, sellDate, jav)
+                print('update [' + str(jav.id) + '] label [' + seller + ']  sell_date [' + sell_date + '] ' + str(self.is_check))
 
             if before_p == jav.productNumber:
+                continue
+
+            if len(jav.productNumber) <= 0:
                 continue
 
             # print(str(before_p) + ' -> ' + str(jav.productNumber.strip()) + '    ' + jav.title)
@@ -42,6 +55,13 @@ class TestEntryRegisterJav:
 
             if not self.is_check:
                 self.db.update_jav2(jav)
+
+            print('update [' + str(jav.id) + '] p_number [' + str(before_p) + ']  --> [' + jav.productNumber + '] ' + str(self.is_check))
+
+            idx = idx + 1
+
+            if idx > 50:
+                break
 
     def get_single(self):
 

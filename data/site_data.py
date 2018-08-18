@@ -17,6 +17,10 @@ class JavData:
         self.downloadLinks = ''
         self.productNumber = ''
         self.isSelection = False
+        self.isParse2 = False
+        self.makersId = 0
+        self.rating = 0
+        self.isSite = 0
         self.createdAt = None
         self.updatedAt = None
 
@@ -92,20 +96,24 @@ class MovieMakerData:
     def __init__(self):
         self.id = -1
         self.name = ''
+        self.matchName = ''
         self.label = ''
         self.kind = 0
         self.matchStr = ''
         self.matchProductNumber = ''
+        self.siteKind = 0
         self.createdAt = None
         self.updatedAt = None
 
     def print(self):
         print('【' + self.name + ':' + self.label + '】')
-        print('  kind    [' + str(self.kind) + ']')
-        print('  match   [' + self.matchStr + ']')
-        print('  match_p [' + self.matchProductNumber + ']')
-        print('  created [' + str(self.createdAt) + ']')
-        print('  updated [' + str(self.updatedAt) + ']')
+        print('  matchName [' + str(self.matchName) + ']')
+        print('  kind      [' + str(self.kind) + ']')
+        print('  match     [' + self.matchStr + ']')
+        print('  match_p   [' + self.matchProductNumber + ']')
+        print('  site_kind [' + self.siteKind + ']')
+        print('  created   [' + str(self.createdAt) + ']')
+        print('  updated   [' + str(self.updatedAt) + ']')
         print(' ')
 
 
