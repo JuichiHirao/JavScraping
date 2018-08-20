@@ -13,7 +13,7 @@ class EntryRegisterJav2:
 
         options = Options()
         options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
         self.main_url = 'http://javarchive.com/'
         # self.main_url = 'http://javarchive.com/category/av-censored/'
 
