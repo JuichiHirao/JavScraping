@@ -164,8 +164,6 @@ class DbMysql:
     def get_jav_by_id(self, id):
 
         sql = self.__get_sql_select()
-        sql = sql + '  WHERE id = %s ' \
-                    '  ORDER BY post_date'
 
         self.cursor.execute(sql, (id, ))
 
@@ -327,3 +325,30 @@ class DbMysql:
                             , bjData.postedIn))
 
         self.conn.commit()
+
+    def update_import_by_id(self, id, product_number, match_maker):
+        sql = 'UPDATE import ' \
+                '  SET kind = %s ' \
+                '   , match_product = %s ' \
+                '   , product_number = %s ' \
+                '   , maker = %s ' \
+                '  WHERE id = %s '
+
+        self.cursor.execute(sql, (match_maker.kind, match_maker.matchProductNumber, product_number, match_maker.get_maker(''), id))
+
+        self.conn.commit()
+
+    def get_import_copytext_by_id(self, id):
+        sql = 'SELECT copy_text ' \
+                '  FROM import ' \
+                '  WHERE id = %s '
+
+        self.cursor.execute(sql, (id, ))
+
+        rs = self.cursor.fetchall()
+
+        for row in rs:
+            return row[0]
+
+        return ''
+

@@ -33,7 +33,7 @@ class TestEntryRegisterJav:
             if jav.isSite > 0 or jav.isParse2 > 0:
                 continue
             before_p = jav.productNumber
-            jav.productNumber, seller, sell_date = product_number_tool.parse2(jav, self.is_check)
+            jav.productNumber, seller, sell_date, match_maker = product_number_tool.parse2(jav, self.is_check)
 
             if jav.isSite == 0 and len(seller) > 0:
                 sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
@@ -74,9 +74,25 @@ class TestEntryRegisterJav:
         if not self.is_check:
             self.db.update_jav2(jav)
 
+    def get_single_from_import(self):
+
+        import_id = 89
+        product_number_tool = product_number_register.ProductNumberRegister()
+        jav = site_data.JavData()
+        match_maker = site_data.MovieMakerData()
+        jav.title = self.db.get_import_copytext_by_id(import_id)
+
+        jav.productNumber, seller, sell_date, match_maker = product_number_tool.parse2(jav, self.is_check)
+        print(jav.productNumber + ' title [' + jav.title + ']')
+        if match_maker is None:
+            print('no match maker '  ' title [' + jav.title + ']')
+
+        # if not self.is_check:
+        self.db.update_import_by_id(import_id, jav.productNumber, match_maker)
+
 
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
     entry_register.test_parse_product_number()
-    # entry_register.get_single()
+    # entry_register.get_single_from_import()
 

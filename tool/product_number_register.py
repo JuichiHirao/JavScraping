@@ -142,7 +142,7 @@ class ProductNumberRegister:
                 if len(find_list_maker) <= 0:
                     print('  is_nomatch メーカー[' + jav.maker + ':' + jav.label + ']  は、movie_makersに存在しない  ' + jav.title)
 
-        return p_number, seller, sell_date
+        return p_number, seller, sell_date, match_maker
 
     def parse(self, title):
         match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]*', title)

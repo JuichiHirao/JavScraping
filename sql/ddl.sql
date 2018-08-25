@@ -103,6 +103,29 @@ SELECT id, title, maker, label, product_number, is_selection, is_site, is_parse2
 -- -3 メーカには複数一致、製品番号に一致しない ID [' + str(jav.id) + '] jav [' + jav.maker + ':' + jav.label + ']' + '  maker [' + find_list_maker[0].name + ']' + jav.title)
 
 INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
-  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' )
+  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' );
 INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
-  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' )
+  VALUES('ビッグ・ザ・肉道／妄想族', 'ビッグ・ザ・肉道／妄想族', '', 1, 'MEAT', '', 0, 'MANUAL 2018-08-13' );
+
+SELECT * FROM movie_makers WHERE name = 'STAR PARADISE';
+
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('STAR PARADISE', '凸道', '', 1, 'MOKO', '', 0, 'MANUAL 2018-08-25' );
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('STAR PARADISE', 'おふくろ鉄道', '', 1, 'OFUKU', '', 0, 'MANUAL 2018-08-25' );
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('デジタルアーク', '', '', 1, 'CHAE', '', 0, 'MANUAL 2018-08-25' );
+
+
+
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('SITE', 'Real Street Angels', 'RealStreetAngel', 1, '', 'm[0-9]{3}', 0, 'MANUAL 2018-08-25' );
+
+-- Mywife-00726 百田 弘子 再會篇
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('SITE', 'Mywife', '舞ワイフ', 1, '', '[0-9]{5}', 0, 'MANUAL 2018-08-25' );
+
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('ゑびすさん／妄想族', '', '', 1, 'EVIZ', '', 0, 'MANUAL 2018-08-25' );
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('ゑびすさん／妄想族', '', '', 1, 'EVIS', '', 0, 'MANUAL 2018-08-25' );
