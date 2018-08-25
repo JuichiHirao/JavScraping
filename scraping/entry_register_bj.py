@@ -32,7 +32,7 @@ class EntryRegisterBj:
 
         start = idx = 1
 
-        end = start + 30
+        end = start + 10
         current_url = ''
         page_url = ''
         is_stop = False

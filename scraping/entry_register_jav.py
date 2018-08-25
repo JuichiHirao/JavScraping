@@ -37,7 +37,7 @@ class EntryRegisterJav:
                 self.driver.get(self.main_url + 'page/' + str(idx) + "/")
 
             if idx == start:
-                sleep(6)
+                sleep(8)
 
             for entry in self.driver.find_elements_by_css_selector('.hentry'):
 
