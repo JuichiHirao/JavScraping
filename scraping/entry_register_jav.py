@@ -26,7 +26,7 @@ class EntryRegisterJav:
 
         product_number_tool = product_number_register.ProductNumberRegister()
         start = idx = 1
-        end = start + 20
+        end = start + 50
 
         is_exist = False
 
@@ -93,7 +93,14 @@ class EntryRegisterJav:
                 # for a in entry.find_elements_by_css_selector('.more-link'):
                 #     jav.url = a.get_attribute('href')
 
-                jav.productNumber = product_number_tool.parse(jav.title)
+                jav.productNumber, seller, sell_date, match_maker, is_parse2 = product_number_tool.parse2(jav, True)
+                if seller is not None and len(seller) > 0:
+                    jav.label = seller
+                    jav.sellDate = sell_date
+                if match_maker is not None:
+                    jav.makersId = match_maker.id
+                jav.isParse2 = is_parse2
+                # jav.productNumber = product_number_tool.parse(jav.title)
                 jav.print()
 
                 self.db.export_jav(jav)

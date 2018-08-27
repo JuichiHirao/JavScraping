@@ -38,6 +38,7 @@ ALTER TABLE jav ADD makers_id MEDIUMINT DEFAULT 0 AFTER is_site;
 ALTER TABLE movie_makers ADD site_kind TINYINT DEFAULT 0 AFTER match_product_number;
 ALTER TABLE movie_makers ADD match_name TEXT AFTER name;
 ALTER TABLE movie_makers ADD registered_by TEXT AFTER site_kind;
+ALTER TABLE movie_makers ADD replace_words TEXT AFTER site_kind;
 
 UPDATE movie_makers SET movie_makers.match_name = name;
 UPDATE movie_makers SET movie_makers.registered_by = 'IMPORT';
@@ -129,3 +130,9 @@ INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product
   VALUES('ゑびすさん／妄想族', '', '', 1, 'EVIZ', '', 0, 'MANUAL 2018-08-25' );
 INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
   VALUES('ゑびすさん／妄想族', '', '', 1, 'EVIS', '', 0, 'MANUAL 2018-08-25' );
+
+INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('DANDY', '', '', 1, 'DANDY', '', 0, 'MANUAL 2018-08-26' );
+INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES ('オーロラプロジェクト', '(オーロラプロジェクト|オーロラプロジェクト・アネックス)', 'アネックス', 1, 'APNS', '', 0, 'MANUAL 2018-08-26');
+

@@ -294,13 +294,18 @@ class DbMysql:
     def export_jav(self, javData):
 
         sql = 'INSERT INTO jav (title, post_date ' \
-                ', sell_date, actress, maker, label, url, product_number) ' \
-                ' VALUES(%s, %s, %s, %s, %s, %s, %s, %s)'
+                '  , sell_date, actress, maker, label' \
+                '  , url, product_number, makers_id, is_parse2 ' \
+                '  ) ' \
+                ' VALUES(%s, %s' \
+                '  , %s, %s, %s, %s' \
+                '  , %s, %s, %s, %s' \
+                ' )'
 
         self.cursor.execute(sql, (javData.title, javData.postDate
-                            , javData.sellDate, javData.actress
-                            , javData.maker, javData.label
-                            , javData.url, javData.productNumber))
+                            , javData.sellDate, javData.actress, javData.maker, javData.label
+                            , javData.url, javData.productNumber, javData.makersId, javData.isParse2
+                            ))
 
         self.conn.commit()
 

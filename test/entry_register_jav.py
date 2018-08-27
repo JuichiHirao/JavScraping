@@ -63,6 +63,34 @@ class TestEntryRegisterJav:
             if idx > 50:
                 break
 
+    def test_parse_product_number_retry_error(self):
+
+        javs = self.db.get_javs_all()
+
+        product_number_tool = product_number_register.ProductNumberRegister()
+        idx = 0
+        for jav in javs:
+
+            if not (jav.isSelection == 1 and jav.isParse2 < 0):
+                continue
+
+            jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
+
+            if jav.isSite == 0 and len(seller) > 0:
+                sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
+                if not self.is_check:
+                    self.db.update_jav_label_selldate(seller, sellDate, jav)
+                print('update [' + str(jav.id) + '] label [' + seller + ']  sell_date [' + sell_date + '] ' + str(self.is_check))
+
+            # print('update [' + str(jav.id) + '] p_number [' + str(before_p) + ']  --> [' + jav.productNumber + '] ' + str(self.is_check))
+            if not self.is_check:
+                self.db.update_jav2(jav)
+
+            idx = idx + 1
+
+            if idx > 5:
+                break
+
     def get_single(self):
 
         jav = self.db.get_jav_by_id(3276)
@@ -93,6 +121,7 @@ class TestEntryRegisterJav:
 
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
-    entry_register.test_parse_product_number()
+    # entry_register.test_parse_product_number()
+    entry_register.test_parse_product_number_retry_error()
     # entry_register.get_single_from_import()
 

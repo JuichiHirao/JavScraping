@@ -136,8 +136,11 @@ class CollectJav:
         for link in links:
             filename = link[link.rfind("/") + 1:]
             pathname = os.path.join(self.store_path, filename)
-            urllib.request.urlretrieve(link, pathname)
-            is_download = True
+            try:
+                urllib.request.urlretrieve(link, pathname)
+                is_download = True
+            except:
+                print('except error')
 
         return is_download
 
