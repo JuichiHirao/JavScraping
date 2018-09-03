@@ -6,15 +6,16 @@ from datetime import datetime
 from db import mysql_control
 from data import site_data
 from tool import product_number_register
+from scraping import collect_jav
 
 
 class TestEntryRegisterJav:
 
     def __init__(self):
 
-        # options = Options()
-        # options.add_argument('--headless')
-        # self.driver = webdriver.Chrome(chrome_options=options)
+        options = Options()
+        options.add_argument('--headless')
+        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
 
         # self.main_url = "http://maddawgjav.net/"
 
@@ -62,6 +63,18 @@ class TestEntryRegisterJav:
 
             if idx > 50:
                 break
+
+    def test_update_download_link(self):
+
+        javs = self.db.get_url_jav(811)
+
+        c_jav = collect_jav.CollectJav()
+        for jav in javs:
+            self.driver.get(str(jav.url))
+
+            sleep(8)
+
+            c_jav.execute_info(jav, self.driver)
 
     def test_parse_product_number_retry_error(self):
 
@@ -122,6 +135,7 @@ class TestEntryRegisterJav:
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
     # entry_register.test_parse_product_number()
-    entry_register.test_parse_product_number_retry_error()
+    # entry_register.test_parse_product_number_retry_error()
+    entry_register.test_update_download_link()
     # entry_register.get_single_from_import()
 

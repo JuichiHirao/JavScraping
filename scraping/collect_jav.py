@@ -77,40 +77,47 @@ class CollectJav:
             self.driver.get(str(jav.url))
 
             if idx == start:
-                sleep(6)
+                sleep(8)
 
-            for e in self.driver.find_elements_by_css_selector('.entry'):
-                page_data = self.__parse_links(e)
-
-                if self.__download_package(page_data.package_links):
-                    jav.package = page_data.get_package_links()
-                else:
-                    print('  package image error')
-
-                if self.__download_thumbnails(page_data.thumbnail_links):
-                    jav.thumbnail = page_data.get_thumbnail_links()
-                else:
-                    print('  thumbnail image error')
-
-                jav.downloadLinks = ' '.join(page_data.movie_links)
-
-                self.db.update_jav(jav)
+            self.execute_info(jav, self.driver)
 
             idx = idx + 1
 
         self.driver.close()
+
+    def execute_info(self, jav, driver):
+
+        for e in driver.find_elements_by_css_selector('.entry'):
+            page_data = self.__parse_links(e)
+
+            if self.__download_package(page_data.package_links):
+                jav.package = page_data.get_package_links()
+            else:
+                print('  package image error')
+
+            if self.__download_thumbnails(page_data.thumbnail_links):
+                jav.thumbnail = page_data.get_thumbnail_links()
+            else:
+                print('  thumbnail image error')
+
+            jav.downloadLinks = ' '.join(page_data.movie_links)
+
+            self.db.update_jav(jav)
 
     def __parse_links(self, entry):
 
         page_data = PageData()
 
         # aタグは、downloadのリンクとthumbnailのリンクを取得
+        is_hlink = False
         for a in entry.find_elements_by_tag_name('a'):
             contents_link = a.get_attribute('href')
             if re.match('.*jpg$', contents_link):
                 page_data.thumbnail_links.append(contents_link)
             if re.match('.*rapid.*', contents_link):
                 page_data.movie_links.append(contents_link)
+            if re.match('.*hlink.*', contents_link):
+                is_hlink = True
 
         # imgタグは、packageのリンク
         img_url = ''
@@ -120,10 +127,20 @@ class CollectJav:
             try:
                 img_url = entry.find_element_by_css_selector('.aligncenter').get_attribute('src')
             except:
-                img_url = entry.find_element_by_tag_name('img').get_attribute('src')
+                try:
+                    img_url = entry.find_element_by_tag_name('img').get_attribute('src')
+                except:
+                    print('except!!')
 
         if len(img_url) > 0:
             page_data.package_links.append(img_url)
+
+        if is_hlink:
+            self.driver.get(str(contents_link))
+            for a in self.driver.find_elements_by_tag_name('a'):
+                contents_link = a.get_attribute('href')
+                if re.match('.*rapid.*', contents_link):
+                    page_data.movie_links.append(contents_link)
 
         page_data.print()
 

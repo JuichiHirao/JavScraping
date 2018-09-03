@@ -77,9 +77,30 @@ class DbMysql:
     def get_url_javs(self):
 
         sql = 'SELECT id, url FROM jav WHERE package IS NULL AND download_links IS NULL ORDER BY post_date'
-        # sql = 'SELECT id, url FROM jav WHERE thumbnail = "" ORDER BY post_date'
+        # sql = 'SELECT id, url FROM jav WHERE ID = 811 ORDER BY post_date'
 
         self.cursor.execute(sql)
+
+        # rowcountは戻りがあっても、正しい件数を取得出来ない
+        # rowcount = self.cursor.rowcount
+        rs = self.cursor.fetchall()
+
+        javs = []
+        for row in rs:
+            jav = site_data.JavData()
+            jav.id = row[0]
+            jav.url = row[1]
+            javs.append(jav)
+
+        self.conn.commit()
+
+        return javs
+
+    def get_url_jav(self, id):
+
+        sql = 'SELECT id, url FROM jav WHERE ID = %s '
+
+        self.cursor.execute(sql, (id, ))
 
         # rowcountは戻りがあっても、正しい件数を取得出来ない
         # rowcount = self.cursor.rowcount

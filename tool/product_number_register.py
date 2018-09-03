@@ -99,7 +99,7 @@ class ProductNumberRegister:
 
         # javのメーカ名が無い場合
         else:
-            find_filter_maker = filter(lambda maker: len(maker.matchProductNumber.strip()) > 0 and re.search(maker.matchStr, jav.title) and re.search(maker.matchProductNumber, jav.title, flags=re.IGNORECASE), self.makers)
+            find_filter_maker = filter(lambda maker: len(maker.matchProductNumber.strip()) > 0 and re.search(maker.matchStr, jav.title, flags=re.IGNORECASE) and re.search(maker.matchProductNumber, jav.title, flags=re.IGNORECASE), self.makers)
             find_list_maker = list(find_filter_maker)
             match_maker = None
             p_number = ''
