@@ -102,6 +102,9 @@ class MovieMakerData:
         self.matchStr = ''
         self.matchProductNumber = ''
         self.siteKind = 0
+        self.replaceWords = ''
+        self.pNumberGen = 0
+        self.registeredBy = ''
         self.createdAt = None
         self.updatedAt = None
 

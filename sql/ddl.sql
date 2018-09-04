@@ -39,6 +39,7 @@ ALTER TABLE movie_makers ADD site_kind TINYINT DEFAULT 0 AFTER match_product_num
 ALTER TABLE movie_makers ADD match_name TEXT AFTER name;
 ALTER TABLE movie_makers ADD registered_by TEXT AFTER site_kind;
 ALTER TABLE movie_makers ADD replace_words TEXT AFTER site_kind;
+ALTER TABLE movie_makers ADD p_number_gen TINYINT AFTER replace_words;
 
 UPDATE movie_makers SET movie_makers.match_name = name;
 UPDATE movie_makers SET movie_makers.registered_by = 'IMPORT';
@@ -135,4 +136,11 @@ INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product
   VALUES('DANDY', '', '', 1, 'DANDY', '', 0, 'MANUAL 2018-08-26' );
 INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
   VALUES ('オーロラプロジェクト', '(オーロラプロジェクト|オーロラプロジェクト・アネックス)', 'アネックス', 1, 'APNS', '', 0, 'MANUAL 2018-08-26');
+
+INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, registered_by)
+  VALUES ('HEY動画', '4060', 'ハッピーハウス', 3, 'ハッピーハウス', 'PPV[0-9]{3}', 0, 'PPV', 'MANUAL 2018-09-03');
+INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, registered_by)
+  VALUES ('HEY動画', '4060', '人妻略奪', 3, '(4181|人妻略奪)', 'PPV[0-9]{3}', 0, 'PPV', 'MANUAL 2018-09-03');
+INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', 'JAV-XXXX', 3, '(4189|JAV-XXXX)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-09-03');
 

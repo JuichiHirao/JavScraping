@@ -34,7 +34,7 @@ class TestEntryRegisterJav:
             if jav.isSite > 0 or jav.isParse2 > 0:
                 continue
             before_p = jav.productNumber
-            jav.productNumber, seller, sell_date, match_maker = product_number_tool.parse2(jav, self.is_check)
+            jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
 
             if jav.isSite == 0 and len(seller) > 0:
                 sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
@@ -66,7 +66,7 @@ class TestEntryRegisterJav:
 
     def test_update_download_link(self):
 
-        javs = self.db.get_url_jav(811)
+        javs = self.db.get_url_jav(805)
 
         c_jav = collect_jav.CollectJav()
         for jav in javs:
@@ -104,13 +104,36 @@ class TestEntryRegisterJav:
             if idx > 5:
                 break
 
+    def get_hey(self):
+
+        product_number_tool = product_number_register.ProductNumberRegister()
+        javs = self.db.get_jav_hey()
+        for jav in javs:
+            # jav.print()
+
+            before_p = jav.productNumber
+            jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
+            print('  ' + jav.productNumber + ' <-- ' + before_p)
+            print('')
+
+            if jav.isSite == 0 and len(seller) > 0:
+                sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
+                if not self.is_check:
+                    self.db.update_jav_label_selldate(seller, sellDate, jav)
+                print('update [' + str(jav.id) + '] label [' + seller + ']  sell_date [' + sell_date + '] ' + str(self.is_check))
+
+            if not self.is_check:
+                self.db.update_jav2(jav)
+
     def get_single(self):
 
-        jav = self.db.get_jav_by_id(3276)
+        jav = self.db.get_jav_by_id(774)
+        # jav = self.db.get_jav_by_id(313)
         jav.print()
         product_number_tool = product_number_register.ProductNumberRegister()
 
-        jav.productNumber = product_number_tool.parse(jav.title)
+        jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
+        # jav.productNumber = product_number_tool.parse2(jav.title)
         print(jav.productNumber)
         if not self.is_check:
             self.db.update_jav2(jav)
@@ -123,7 +146,7 @@ class TestEntryRegisterJav:
         match_maker = site_data.MovieMakerData()
         jav.title = self.db.get_import_copytext_by_id(import_id)
 
-        jav.productNumber, seller, sell_date, match_maker = product_number_tool.parse2(jav, self.is_check)
+        jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
         print(jav.productNumber + ' title [' + jav.title + ']')
         if match_maker is None:
             print('no match maker '  ' title [' + jav.title + ']')
@@ -134,8 +157,10 @@ class TestEntryRegisterJav:
 
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
-    # entry_register.test_parse_product_number()
+    # entry_register.get_single()
+    # entry_register.get_hey()
+    entry_register.test_parse_product_number()
     # entry_register.test_parse_product_number_retry_error()
-    entry_register.test_update_download_link()
+    # entry_register.test_update_download_link()
     # entry_register.get_single_from_import()
 

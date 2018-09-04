@@ -119,7 +119,12 @@ class DbMysql:
 
     def get_movie_maker(self):
 
-        sql = 'SELECT id, name, match_name, label, kind, match_str, match_product_number, site_kind, created_at, updated_at FROM movie_makers ORDER BY id'
+        sql = 'SELECT id ' \
+              '  , name, match_name, label, kind ' \
+              '  , match_str, match_product_number, site_kind, replace_words ' \
+              '  , p_number_gen, registered_by ' \
+              '  , created_at, updated_at ' \
+              'FROM movie_makers ORDER BY id'
 
         self.cursor.execute(sql)
 
@@ -136,8 +141,11 @@ class DbMysql:
             maker.matchStr = row[5]
             maker.matchProductNumber = row[6]
             maker.siteKind = row[7]
-            maker.createdAt = row[8]
-            maker.updatedAt = row[9]
+            maker.replaceWords = row[8]
+            maker.pNumberGen = row[9]
+            maker.registeredBy = row[10]
+            maker.createdAt = row[11]
+            maker.updatedAt = row[12]
             makers.append(maker)
 
         self.conn.commit()
@@ -182,9 +190,26 @@ class DbMysql:
 
         return javs
 
+    def get_jav_hey(self):
+
+        sql = self.__get_sql_select()
+        sql = sql + '  WHERE title like "%-PPV%" '
+
+        self.cursor.execute(sql)
+
+        rs = self.cursor.fetchall()
+
+        javs = self.__get_list(rs)
+
+        if javs is None or len(javs) <= 0:
+            return None
+
+        return javs
+
     def get_jav_by_id(self, id):
 
         sql = self.__get_sql_select()
+        sql = sql + '  WHERE id = %s '
 
         self.cursor.execute(sql, (id, ))
 
