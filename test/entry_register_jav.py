@@ -20,8 +20,8 @@ class TestEntryRegisterJav:
         # self.main_url = "http://maddawgjav.net/"
 
         self.db = mysql_control.DbMysql()
-        # self.is_check = True
-        self.is_check = False
+        self.is_check = True
+        # self.is_check = False
 
     def test_parse_product_number(self):
         # javs = self.db.get_javs_nothing_product_number()

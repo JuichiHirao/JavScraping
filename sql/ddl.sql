@@ -40,6 +40,9 @@ ALTER TABLE movie_makers ADD match_name TEXT AFTER name;
 ALTER TABLE movie_makers ADD registered_by TEXT AFTER site_kind;
 ALTER TABLE movie_makers ADD replace_words TEXT AFTER site_kind;
 ALTER TABLE movie_makers ADD p_number_gen TINYINT AFTER replace_words;
+ALTER TABLE maker ADD deleted TINYINT AFTER p_number_gen;
+
+UPDATE maker SET maker.deleted = 0;
 
 UPDATE movie_makers SET movie_makers.match_name = name;
 UPDATE movie_makers SET movie_makers.registered_by = 'IMPORT';
@@ -144,3 +147,5 @@ INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_produc
 INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
   VALUES ('HEY動画', 'HEY動画', 'JAV-XXXX', 3, '(4189|JAV-XXXX)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-09-03');
 
+
+ALTER TABLE makers RENAME maker;
