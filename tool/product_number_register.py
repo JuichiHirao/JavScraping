@@ -84,7 +84,7 @@ class ProductNumberRegister:
                         ng_reason = -2
                 else:
                     # juyなど、Madonnaとマドンナで英語日本語でマッチしない場合はここにくる
-                    print('NG ' + str(len(find_list_maker)) + ' メーカには複数一致、製品番号に一致しない ID [' + str(
+                    print('NG ' + str(len(find_list_maker)) + ' メーカーには複数一致、製品番号に一致しない ID [' + str(
                         jav.id) + '] jav [' + jav.maker + ':' + jav.label + ']' + '  maker [' + find_list_maker[
                               0].name + ']' + jav.title)
                     ng_reason = -3

@@ -120,13 +120,14 @@ class MovieMakerData:
 
     def print(self):
         print('【' + self.name + ':' + self.label + '】')
-        print('  matchName [' + str(self.matchName) + ']')
-        print('  kind      [' + str(self.kind) + ']')
-        print('  match     [' + self.matchStr + ']')
-        print('  match_p   [' + self.matchProductNumber + ']')
-        print('  site_kind [' + self.siteKind + ']')
-        print('  created   [' + str(self.createdAt) + ']')
-        print('  updated   [' + str(self.updatedAt) + ']')
+        print('  matchName    [' + str(self.matchName) + ']')
+        print('  kind         [' + str(self.kind) + ']')
+        print('  match        [' + self.matchStr + ']')
+        print('  match_p      [' + self.matchProductNumber + ']')
+        print('  site_kind    [' + str(self.siteKind) + ']')
+        print('  registeredBy [' + self.registeredBy + ']')
+        print('  created      [' + str(self.createdAt) + ']')
+        print('  updated      [' + str(self.updatedAt) + ']')
         print(' ')
 
 

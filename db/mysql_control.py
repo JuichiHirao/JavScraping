@@ -155,6 +155,26 @@ class DbMysql:
 
         return makers
 
+    def export_maker(self, maker):
+
+        sql = 'INSERT INTO maker ( ' \
+              '  name, match_name, label, kind ' \
+              '  , match_str, match_product_number, site_kind, replace_words ' \
+              '  , p_number_gen, registered_by ' \
+              '  ) ' \
+              '  VALUES ( ' \
+              '  %s, %s, %s, %s ' \
+              '  , %s, %s, %s, %s ' \
+              '  , %s, %s ' \
+              '  ) '
+
+        self.cursor.execute(sql, (maker.name, maker.matchName, maker.label, maker.kind
+                                  , maker.matchStr, maker.matchProductNumber, maker.siteKind, maker.replaceWords
+                                  , maker.pNumberGen, maker.registeredBy
+                                  ))
+
+        self.conn.commit()
+
     def __get_sql_select(self):
         sql = 'SELECT id, title, post_date' \
                 '  , thumbnail, sell_date, actress, maker ' \

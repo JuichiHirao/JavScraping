@@ -41,6 +41,7 @@ ALTER TABLE movie_makers ADD registered_by TEXT AFTER site_kind;
 ALTER TABLE movie_makers ADD replace_words TEXT AFTER site_kind;
 ALTER TABLE movie_makers ADD p_number_gen TINYINT AFTER replace_words;
 ALTER TABLE maker ADD deleted TINYINT AFTER p_number_gen;
+ALTER TABLE maker MODIFY deleted TINYINT DEFAULT 0;
 
 UPDATE maker SET maker.deleted = 0;
 
