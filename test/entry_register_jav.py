@@ -20,8 +20,9 @@ class TestEntryRegisterJav:
         # self.main_url = "http://maddawgjav.net/"
 
         self.db = mysql_control.DbMysql()
-        self.is_check = True
-        # self.is_check = False
+        # self.is_check = True
+        self.is_check = False
+        self.target_max = 20;
 
     def test_parse_product_number(self):
         # javs = self.db.get_javs_nothing_product_number()
@@ -35,6 +36,11 @@ class TestEntryRegisterJav:
                 continue
             before_p = jav.productNumber
             jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
+
+            idx = idx + 1
+
+            if idx < 0 or idx > self.target_max:
+                break
 
             if jav.isSite == 0 and len(seller) > 0:
                 sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
@@ -58,11 +64,6 @@ class TestEntryRegisterJav:
                 self.db.update_jav2(jav)
 
             print('update [' + str(jav.id) + '] p_number [' + str(before_p) + ']  --> [' + jav.productNumber + '] ' + str(self.is_check))
-
-            idx = idx + 1
-
-            if idx > 50:
-                break
 
     def test_update_download_link(self):
 
@@ -101,7 +102,7 @@ class TestEntryRegisterJav:
 
             idx = idx + 1
 
-            if idx > 5:
+            if idx < 0 or idx > self.target_max:
                 break
 
     def get_hey(self):
@@ -127,7 +128,7 @@ class TestEntryRegisterJav:
 
     def get_single(self):
 
-        jav = self.db.get_jav_by_id(774)
+        jav = self.db.get_jav_by_id(543)
         # jav = self.db.get_jav_by_id(313)
         jav.print()
         product_number_tool = product_number_register.ProductNumberRegister()
@@ -151,16 +152,16 @@ class TestEntryRegisterJav:
         if match_maker is None:
             print('no match maker '  ' title [' + jav.title + ']')
 
-        # if not self.is_check:
-        self.db.update_import_by_id(import_id, jav.productNumber, match_maker)
+        if not self.is_check:
+            self.db.update_import_by_id(import_id, jav.productNumber, match_maker)
 
 
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
     # entry_register.get_single()
     # entry_register.get_hey()
-    entry_register.test_parse_product_number()
-    # entry_register.test_parse_product_number_retry_error()
+    # entry_register.test_parse_product_number()
+    entry_register.test_parse_product_number_retry_error()
     # entry_register.test_update_download_link()
     # entry_register.get_single_from_import()
 

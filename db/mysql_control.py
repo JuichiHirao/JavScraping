@@ -117,6 +117,24 @@ class DbMysql:
 
         return javs
 
+    def is_exist_maker(self, match_str):
+
+        if len(match_str) <= 0:
+            return False
+
+        sql = 'SELECT id ' \
+              '  FROM maker ' \
+              '  WHERE match_str = %s '
+
+        self.cursor.execute(sql, (match_str,))
+
+        rs = self.cursor.fetchall()
+
+        if rs:
+            return True
+
+        return False
+
     def get_movie_maker(self):
 
         sql = 'SELECT id ' \

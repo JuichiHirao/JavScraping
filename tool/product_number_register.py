@@ -103,8 +103,7 @@ class ProductNumberRegister:
                     p_number = match.group().upper()
                 else:
                     is_nomatch = True
-                    print('match maker other maker.matchStr [' + str(
-                        match_maker.id) + ']' + match_maker.matchStr + '  ' + jav.title)
+                    print('メーカー[' + str(match_maker.id) + '] に一致したが、タイトル内に[' + match_maker.matchStr + '] の文字列がない ' + jav.title)
                     ng_reason = -5
 
         # javのメーカ名が無い場合
@@ -181,7 +180,7 @@ class ProductNumberRegister:
                 if len(find_list_maker) > 1:
                     print('NG 製品番号PARSE maker.matchStrに複数一致 [' + str(jav.id) + '] ' + jav.title)
                 if len(find_list_maker) <= 0:
-                    print('  is_nomatch メーカー[' + jav.maker + ':' + jav.label + ']  は、movie_makersに存在しない  ' + jav.title)
+                    print('NG [' + str(jav.id) + '] is_nomatch メーカー[' + jav.maker + ':' + jav.label + ']  は、movie_makersに存在しない  ' + jav.title)
 
         return p_number, seller, sell_date, match_maker, ng_reason
 
