@@ -194,7 +194,7 @@ class DbMysql:
         self.conn.commit()
 
     def __get_sql_select(self):
-        sql = 'SELECT id, title, post_date' \
+        sql = 'SELECT id, title, post_date, package ' \
                 '  , thumbnail, sell_date, actress, maker ' \
                 '  , label, download_links, url, is_selection' \
                 '  , product_number, rating, is_site ' \
@@ -212,21 +212,22 @@ class DbMysql:
             jav.id = row[0]
             jav.title = row[1]
             jav.postDate = row[2]
-            jav.thumbnail = row[3]
-            jav.sellDate = row[4]
-            jav.actress = row[5]
-            jav.maker = row[6]
-            jav.label = row[7]
-            jav.downloadLinks = row[8]
-            jav.url = row[9]
-            jav.isSelection = row[10]
-            jav.productNumber = row[11]
-            jav.rating = row[12]
-            jav.isSite = row[13]
-            jav.isParse2 = row[14]
-            jav.makersId = row[15]
-            jav.createdAt = row[16]
-            jav.updatedAt = row[17]
+            jav.package = row[3]
+            jav.thumbnail = row[4]
+            jav.sellDate = row[5]
+            jav.actress = row[6]
+            jav.maker = row[7]
+            jav.label = row[8]
+            jav.downloadLinks = row[9]
+            jav.url = row[10]
+            jav.isSelection = row[11]
+            jav.productNumber = row[12]
+            jav.rating = row[13]
+            jav.isSite = row[14]
+            jav.isParse2 = row[15]
+            jav.makersId = row[16]
+            jav.createdAt = row[17]
+            jav.updatedAt = row[18]
             javs.append(jav)
 
         return javs

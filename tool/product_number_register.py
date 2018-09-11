@@ -24,7 +24,7 @@ class ProductNumberRegister:
         is_nomatch = False
         match_maker = None
         # match = re.search('[0-9A-Za-z]*-[0-9A-Za-z]*', jav.title)
-        if jav.productNumber == '399144':
+        if jav.id == 316:
             i = 0
 
         # jav.makerが存在する場合（ほぼAVRIP）
@@ -136,7 +136,11 @@ class ProductNumberRegister:
                 if match_maker.pNumberGen == 1:
                     m = re.search(match_maker.matchProductNumber, jav.title, flags=re.IGNORECASE)
                     m_m = re.search('\([0-9]{4}', match_maker.matchStr)
-                    m_number = m_m.group()
+                    if m_m:
+                        m_number = m_m.group()
+                    else:
+                        print("HEY動画のmakerのmatchStrの列が(4083|本生素人TV)の形式になっていません")
+                        exit(-1)
                     p_number = m_number.replace('(', '') + '_' + m.group().replace('PPV', '')
                 else:
                     p_number = m.group().strip()
@@ -156,6 +160,17 @@ class ProductNumberRegister:
                     if match_maker.siteKind == 1:
                         seller, sell_date = self.fc2.get_info(p_number)
                         # print('    ' + seller + ' ' + sell_date)
+
+        # HEY動画でAV9898など配信名しか入っていない場合の処理
+        '''
+        if ng_reason == -7:
+            title_plus_file = jav.title + ' ' + jav.package
+            find_filter_label = filter(lambda maker: re.search(maker.matchName, title_plus_file, re.IGNORECASE),
+                                       self.makers)
+            find_list_label = list(find_filter_label)
+            if len(find_list_label) > 0:
+                print(jav.title)
+        '''
 
         if ng_reason < 0:
             if not is_check:

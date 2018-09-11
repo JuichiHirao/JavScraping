@@ -48,7 +48,10 @@ class JavData:
         print('  label    [' + self.label + ']')
         print('  post     [' + str(self.postDate) + ']')
         print('  url      [' + self.url + ']')
-        print('  p_number [' + self.productNumber + ']')
+        if self.productNumber:
+            print('  p_number [' + self.productNumber + ']')
+        else:
+            print('  p_number is None')
         print(' ')
 
 
