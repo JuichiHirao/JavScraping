@@ -124,7 +124,7 @@ class DbMysql:
 
         sql = 'SELECT id ' \
               '  FROM maker ' \
-              '  WHERE match_str = %s '
+              '  WHERE match_str = %s and deleted = 0 '
 
         self.cursor.execute(sql, (match_str,))
 
@@ -236,6 +236,22 @@ class DbMysql:
 
         sql = self.__get_sql_select()
         sql = sql + '  WHERE title like "%-PPV%" '
+
+        self.cursor.execute(sql)
+
+        rs = self.cursor.fetchall()
+
+        javs = self.__get_list(rs)
+
+        if javs is None or len(javs) <= 0:
+            return None
+
+        return javs
+
+    def get_jav_where_agreement(self, where):
+
+        sql = self.__get_sql_select()
+        sql = sql + where
 
         self.cursor.execute(sql)
 

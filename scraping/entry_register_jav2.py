@@ -22,7 +22,7 @@ class EntryRegisterJav2:
     def main2(self):
 
         idx = start = 1
-        end = start + 10
+        end = start + 20
 
         self.main_url = 'https://javfree.me/'
         # sub_urls = ['category/mosaic/', 'category/avi/']
@@ -38,11 +38,7 @@ class EntryRegisterJav2:
                 print(url)
                 print('')
 
-                is_exist = self.register_download_url2(url, sub_url)
-
-                if is_exist:
-                    print('is_exist ' + str(idx))
-                    return
+                self.register_download_url2(url, sub_url)
 
                 idx = idx + 1
 
@@ -65,11 +61,7 @@ class EntryRegisterJav2:
                 print(url)
                 print('')
 
-                is_exist = self.register_download_url(url, sub_url)
-
-                if is_exist:
-                    print('is_exist ' + str(idx))
-                    break
+                self.register_download_url(url, sub_url)
 
                 idx = idx + 1
 
@@ -95,7 +87,8 @@ class EntryRegisterJav2:
 
                 if self.db.exist_title_and_kind(jav2_data.title, jav2_data.kind, 'jav2'):
                     print('title exists [' + jav2_data.title + ']')
-                    return True
+                    continue
+                    # return True
 
                 print('  ' + sub_url + '  ' + jav2_data.url)
                 with urllib.request.urlopen(jav2_data.url) as response:
@@ -145,7 +138,7 @@ class EntryRegisterJav2:
 
                         if self.db.exist_title(jav2_data.title, 'jav2'):
                             print('title exists [' + jav2_data.title + ']')
-                            return True
+                            continue
 
                         jav2_data.url = a_link.attrs['href']
                         print(jav2_data.title)

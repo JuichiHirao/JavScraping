@@ -20,9 +20,9 @@ class TestEntryRegisterJav:
         # self.main_url = "http://maddawgjav.net/"
 
         self.db = mysql_control.DbMysql()
-        # self.is_check = True
-        self.is_check = False
-        self.target_max = 20;
+        self.is_check = True
+        # self.is_check = False
+        self.target_max = 50;
 
     def test_parse_product_number(self):
         # javs = self.db.get_javs_nothing_product_number()
@@ -34,6 +34,9 @@ class TestEntryRegisterJav:
 
             if jav.isSite > 0 or jav.isParse2 > 0:
                 continue
+            if not jav.isSelection == 1:
+                continue
+
             before_p = jav.productNumber
             jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
 
@@ -79,13 +82,14 @@ class TestEntryRegisterJav:
 
     def test_parse_product_number_retry_error(self):
 
-        javs = self.db.get_javs_all()
+        where = ' WHERE is_selection = 1 ORDER BY post_date '
+        javs = self.db.get_jav_where_agreement(where)
 
         product_number_tool = product_number_register.ProductNumberRegister()
         idx = 0
         for jav in javs:
 
-            if not (jav.isSelection == 1 and jav.isParse2 < 0):
+            if jav.isParse2 > 0:
                 continue
 
             jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
@@ -126,9 +130,36 @@ class TestEntryRegisterJav:
             if not self.is_check:
                 self.db.update_jav2(jav)
 
+    def get_jav_where_agreement(self):
+
+        # where = '  where product_number is null or product_number = \'\''
+        # where = '  where id in (5755, 5723, 5721, 5720, 5719, 6395, 6394, 6393, 6392, 6391)'
+        where = '  where id in (1947)'
+        javs = self.db.get_jav_where_agreement(where)
+
+        for jav in javs:
+            # jav.title = jav.title + ' ' + jav.package
+            # jav = self.db.get_jav_by_id(313)
+            jav.print()
+            product_number_tool = product_number_register.ProductNumberRegister()
+
+            jav.productNumber, seller, sell_date, match_maker, ng_reason = product_number_tool.parse2(jav, self.is_check)
+
+            if jav.isSite == 0 and len(seller) > 0:
+                sellDate = datetime.strptime(sell_date, '%Y/%m/%d')
+                if not self.is_check:
+                    self.db.update_jav_label_selldate(seller, sellDate, jav)
+                print('update [' + str(jav.id) + '] label [' + seller + ']  sell_date [' + sell_date + '] ' + str(self.is_check))
+
+            # jav.productNumber = product_number_tool.parse2(jav.title)
+            print('  p_num [' + jav.productNumber + ']')
+            if not self.is_check:
+                self.db.update_jav2(jav)
+
     def get_single(self):
 
-        jav = self.db.get_jav_by_id(543)
+        jav = self.db.get_jav_by_id(1372)
+        # jav.title = jav.title + ' ' + jav.package
         # jav = self.db.get_jav_by_id(313)
         jav.print()
         product_number_tool = product_number_register.ProductNumberRegister()
@@ -159,9 +190,10 @@ class TestEntryRegisterJav:
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
     # entry_register.get_single()
+    # entry_register.get_jav_where_agreement()
     # entry_register.get_hey()
-    # entry_register.test_parse_product_number()
-    entry_register.test_parse_product_number_retry_error()
+    entry_register.test_parse_product_number()
+    # entry_register.test_parse_product_number_retry_error()
     # entry_register.test_update_download_link()
     # entry_register.get_single_from_import()
 

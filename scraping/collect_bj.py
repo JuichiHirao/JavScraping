@@ -2,6 +2,7 @@
 import urllib.request
 from db import mysql_control
 import os
+from time import sleep
 
 
 class CollectImageBj:
@@ -27,9 +28,16 @@ class CollectImageBj:
             for thumbnail in thumbnail_list:
 
                 print(thumbnail)
-                filename = thumbnail[thumbnail.rfind("/") + 1:]
-                pathname = os.path.join(self.store_path, filename)
-                result = urllib.request.urlretrieve(thumbnail, pathname)
+                try:
+                    filename = thumbnail[thumbnail.rfind("/") + 1:]
+                    pathname = os.path.join(self.store_path, filename)
+                    result = urllib.request.urlretrieve(thumbnail, pathname)
+                except:
+                    print('error [' + thumbnail + ']')
+                    sleep(10)
+                    with urllib.request.urlopen(thumbnail) as response:
+                        html = response.read()
+                    result = urllib.request.urlretrieve(thumbnail, pathname)
                 print(str(result))
 
             bj.isDownloads = 1

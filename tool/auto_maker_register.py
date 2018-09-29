@@ -18,12 +18,14 @@ class AutoMakerRegister:
         # self.main_url = "http://maddawgjav.net/"
 
         self.db = mysql_control.DbMysql()
-        # self.is_check = True
-        self.is_check = False
+        self.is_check = True
+        # self.is_check = False
         self.target_max = 5
 
     def register(self):
 
+        # where = ' WHERE id = 1735'
+        # javs = self.db.get_jav_where_agreement(where)
         javs = self.db.get_javs_all()
 
         idx = 0
@@ -40,7 +42,7 @@ class AutoMakerRegister:
               '  , p_number_gen, registered_by ' \
             '''
 
-            m_p = re.search('[A-Z0-9]{3,5}-[A-Z0-9]{2,4}', jav.title, re.IGNORECASE)
+            m_p = re.search('[A-Z0-9]{2,5}-[A-Z0-9]{2,4}', jav.title, re.IGNORECASE)
             match_str = ''
             if m_p:
                 p_number = m_p.group()
@@ -58,9 +60,12 @@ class AutoMakerRegister:
 
             maker = site_data.MovieMakerData()
 
-            maker.name = jav.maker
+            maker.name = jav.maker.replace('/', '／')
             maker.matchName = jav.maker
-            maker.label = jav.label
+            if jav.maker == jav.label:
+                pass
+            else:
+                maker.label = jav.label
             maker.kind = 1
             maker.matchStr = match_str.upper()
             maker.registeredBy = 'AUTO ' + datetime.now().strftime('%Y-%m-%d')

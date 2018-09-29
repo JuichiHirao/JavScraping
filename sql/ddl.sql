@@ -128,8 +128,11 @@ INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product
   VALUES('SITE', 'Real Street Angels', 'RealStreetAngel', 1, '', 'm[0-9]{3}', 0, 'MANUAL 2018-08-25' );
 
 -- Mywife-00726 百田 弘子 再會篇
+INSERT INTO maker(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
+  VALUES('SITE', 'G-AREA', 'G-AREA', 1, '', '[0-9]{3,4}[a-zA-Z]{1,8}', 0, 'MANUAL 2018-09-15' );
+
 INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
-  VALUES('SITE', 'Mywife', '舞ワイフ', 1, '', '[0-9]{5}', 0, 'MANUAL 2018-08-25' );
+  VALUES('SITE', 'Real Street Angels', 'RealStreetAngel', 1, '', 'm[0-9]{3}', 0, 'MANUAL 2018-08-25' );
 
 INSERT INTO movie_makers(name, match_name, label, kind, match_str, match_product_number, site_kind, registered_by)
   VALUES('ゑびすさん／妄想族', '', '', 1, 'EVIZ', '', 0, 'MANUAL 2018-08-25' );
@@ -148,5 +151,11 @@ INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_produc
 INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
   VALUES ('HEY動画', 'HEY動画', 'JAV-XXXX', 3, '(4189|JAV-XXXX)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-09-03');
 
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, p_number_gen, deleted, registered_by)
+  values ('MGS', 'MGS', '俺の素人', 1, 'OREGR', '', 0, null, null, 0, 'MANUAL 2018-09-03');
+
+
 
 ALTER TABLE makers RENAME maker;
+
+SELECT COUNT(*) FROM jav WHERE jav.is_selection = 1;
