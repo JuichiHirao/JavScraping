@@ -1,10 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from db import mysql_control
 import urllib.request
 import re
-from data import site_data
 from bs4 import BeautifulSoup
+from javcore import db
+from javcore import data
 
 
 class EntryRegisterJav2:
@@ -17,7 +17,8 @@ class EntryRegisterJav2:
         self.main_url = 'http://javarchive.com/'
         # self.main_url = 'http://javarchive.com/category/av-censored/'
 
-        self.db = mysql_control.DbMysql()
+        self.jav_dao = db.jav.JavDao()
+        self.jav2_dao = db.jav2.Jav2Dao()
 
     def main2(self):
 
@@ -73,7 +74,7 @@ class EntryRegisterJav2:
             entrys = html_soup.find_all('div', class_='hentry')
             for idx, entry in enumerate(entrys):
                 thumbnail_link = entry.find('a', class_='thumbnail-link')
-                jav2_data = site_data.Jav2Data
+                jav2_data = data.Jav2Data()
                 if 'href' in thumbnail_link.attrs:
                     jav2_data.url = thumbnail_link.attrs['href']
 
@@ -85,8 +86,8 @@ class EntryRegisterJav2:
                 print(jav2_data.title)
                 jav2_data.kind = sub_url
 
-                if self.db.exist_title_and_kind(jav2_data.title, jav2_data.kind, 'jav2'):
-                    print('title exists [' + jav2_data.title + ']')
+                if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
+                    print('title exists [' + jav2_data.title + '] kind [' + jav2_data.kind)
                     continue
                     # return True
 
@@ -98,7 +99,7 @@ class EntryRegisterJav2:
                     content_links = post_content.find_all('a')
                     outline = []
                     lines = post_content.find('p').text.splitlines()
-                    for line in post_content.find('p').text.splitlines():
+                    for line in lines:
                         if len(line.strip()) <= 0:
                             continue
                         outline.append(line)
@@ -114,7 +115,7 @@ class EntryRegisterJav2:
 
                     print('  ' + jav2_data.downloadLinks)
 
-                self.db.export_jav2(jav2_data)
+                self.jav2_dao.export(jav2_data)
 
             return False
 
@@ -123,10 +124,9 @@ class EntryRegisterJav2:
         with urllib.request.urlopen(main_url) as response:
             html = response.read()
             html_soup = BeautifulSoup(html, "html.parser")
-            # entrys = html_soup.find_all('div', class_="post-meta")
             entrys = html_soup.find_all('div', class_=re.compile('post-meta'))
             for idx, entry in enumerate(entrys):
-                jav2_data = site_data.Jav2Data
+                jav2_data = data.Jav2Data()
                 jav2_data.kind = sub_url
                 a_links = entry.find_all('a')
                 for a_link in a_links:
@@ -136,7 +136,7 @@ class EntryRegisterJav2:
                         print(a_link.attrs['href'])
                         jav2_data.title = a_link.attrs['title']
 
-                        if self.db.exist_title(jav2_data.title, 'jav2'):
+                        if self.jav2_dao.is_exist(jav2_data.title):
                             print('title exists [' + jav2_data.title + ']')
                             continue
 
@@ -168,8 +168,7 @@ class EntryRegisterJav2:
                             if len(link_list) > 0:
                                 jav2_data.downloadLinks = ' '.join(link_list)
 
-                    # jav2_data.detail = '  '.join(outline)
-                    self.db.export_jav2(jav2_data)
+                    self.jav2_dao.export(jav2_data)
                     break
 
             return False

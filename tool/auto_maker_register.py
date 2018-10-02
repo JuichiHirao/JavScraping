@@ -2,9 +2,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
-from db import mysql_control
-from data import site_data
 import re
+from javcore import db
+from javcore import data
 
 
 class AutoMakerRegister:
@@ -17,16 +17,17 @@ class AutoMakerRegister:
 
         # self.main_url = "http://maddawgjav.net/"
 
-        self.db = mysql_control.DbMysql()
+        self.jav_dao = db.jav.JavDao()
+        self.maker_dao = db.maker.MakerDao()
         self.is_check = True
         # self.is_check = False
         self.target_max = 5
 
     def register(self):
 
-        # where = ' WHERE id = 1735'
-        # javs = self.db.get_jav_where_agreement(where)
-        javs = self.db.get_javs_all()
+        # where = ' WHERE id = 2512'
+        # javs = self.jav_dao.get_where_agreement(where)
+        javs = self.jav_dao.get_all()
 
         idx = 0
         for jav in javs:
@@ -51,14 +52,15 @@ class AutoMakerRegister:
                 print('[' + str(jav.id) + '] 対象のmatch_strが存在しません [A-Z0-9]{3,5}-[A-Z0-9]{3,4}の正規表現と一致しません' + jav.title)
                 exit(-1)
 
-            if len(match_str) > 0 and self.db.is_exist_maker(match_str.upper()):
+            if len(match_str) > 0 and self.maker_dao.is_exist(match_str.upper()):
+                print('[' + str(jav.id) + '] 発見!! [' + match_str + ']')
                 continue
 
             idx = idx + 1
             if idx < 0 or idx > self.target_max:
                 break
 
-            maker = site_data.MovieMakerData()
+            maker = data.MakerData()
 
             maker.name = jav.maker.replace('/', '／')
             maker.matchName = jav.maker
@@ -74,7 +76,7 @@ class AutoMakerRegister:
             maker.print()
 
             if not self.is_check:
-                self.db.export_maker(maker)
+                self.maker_dao.export(maker)
 
 
 if __name__ == '__main__':

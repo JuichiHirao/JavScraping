@@ -3,6 +3,8 @@ import urllib.request
 from db import mysql_control
 import os
 from time import sleep
+from javcore import db
+from javcore import data
 
 
 class CollectImageBj:
@@ -13,11 +15,12 @@ class CollectImageBj:
 
         self.db = mysql_control.DbMysql()
 
-        self.bjs = self.db.get_url_bjs()
+        self.bj_dao = db.bj.BjDao()
+        self.bjs = self.bj_dao.get_where_agreement('WHERE is_downloads IS NULL OR is_downloads = 0 ORDER BY post_date')
 
     def get_images(self):
 
-        opener=urllib.request.build_opener()
+        opener = urllib.request.build_opener()
         opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
         urllib.request.install_opener(opener)
 
@@ -40,8 +43,7 @@ class CollectImageBj:
                     result = urllib.request.urlretrieve(thumbnail, pathname)
                 print(str(result))
 
-            bj.isDownloads = 1
-            self.db.update_bj(bj)
+            self.bj_dao.update_is_download(bj.id, 1)
 
 
 if __name__ == '__main__':
