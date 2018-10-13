@@ -4,13 +4,15 @@ from selenium.webdriver.chrome.options import Options
 from time import sleep
 from bs4 import BeautifulSoup
 from javcore import db
+from javcore import data
 
 
 class WikiSearch:
     def __init__(self):
         # http://sougouwiki.com/d/%C9%F1%A5%EF%A5%A4%A5%D5%28601%A1%C1%29
 
-        self.main_url = 'http://sougouwiki.com/search?keywords=HIGH-040'
+        # self.main_url = 'http://sougouwiki.com/search?keywords=HIGH-040'
+        self.search_url = 'http://sougouwiki.com/search?keywords='
         self.opener = urllib.request.build_opener()
         self.opener.addheaders = [('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
 
@@ -61,8 +63,9 @@ class WikiSearch:
         return seller, sell_date
 
     def __get_info(self, product_number):
-        # url = self.main_url + product_number
-        url = self.main_url
+
+        url = self.search_url + product_number
+
         urllib.request.install_opener(self.opener)
         with urllib.request.urlopen(url) as response:
             html = response.read()
@@ -75,8 +78,15 @@ class WikiSearch:
             print(p_title)
 
             wikis = result_box.findAll('h3', class_='keyword')
-            print(len(wikis))
-            print(str(wikis))
+            len_wikis = len(wikis)
+
+            if len_wikis > 0:
+                for idx, wiki in enumerate(wikis):
+                    a = wiki.find('a')
+                    url = a.get_attribute('href')
+                    print(url)
+            else:
+                print(len(wikis))
 
         urllib.request.urlcleanup()
 
@@ -85,7 +95,6 @@ class WikiSearch:
     def get_info(self, product_number):
 
         try:
-            # sleep(3)
             return self.__get_info(product_number)
             # return self.__get_info_from_chrome(product_number)
         except:
@@ -93,7 +102,16 @@ class WikiSearch:
             return '', ''
             # return self.__get_info_from_chrome(product_number)
 
+    def execute(self):
+
+        jav = data.JavData()
+        javs = self.jav_dao.get_where_agreement('WHERE id = 1384')
+        for jav in javs:
+            print(jav.productNumber)
+
+        self.get_info(jav.productNumber)
 
 if __name__ == '__main__':
     wiki = WikiSearch()
-    wiki.get_info('TEST')
+    # wiki.get_info('TEST')
+    wiki.execute()
