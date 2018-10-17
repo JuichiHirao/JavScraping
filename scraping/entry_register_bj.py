@@ -5,8 +5,8 @@ from time import sleep
 import iso8601
 import re
 import yaml
-from data import site_data
-from db import mysql_control
+from javcore import db
+from javcore import data
 
 
 class EntryRegisterBj:
@@ -22,7 +22,7 @@ class EntryRegisterBj:
             self.main_url = obj['site_url']
             self.stop_title = obj['stop_title']
 
-        self.db = mysql_control.DbMysql()
+        self.bj_dao = db.bj.BjDao()
 
     def register_page(self):
 
@@ -52,7 +52,7 @@ class EntryRegisterBj:
 
             for entry in self.driver.find_elements_by_css_selector('.hentry'):
 
-                bj = site_data.BjData()
+                bj = data.BjData()
 
                 for h2 in entry.find_elements_by_tag_name('h2'):
                     for a in h2.find_elements_by_tag_name('a'):
@@ -60,7 +60,7 @@ class EntryRegisterBj:
                     bj.title = h2.text
                     break
 
-                title_exist = self.db.exist_title(bj.title, 'bj')
+                title_exist = self.bj_dao.is_exist(bj.title)
 
                 if title_exist:
                     is_stop = True
@@ -102,7 +102,7 @@ class EntryRegisterBj:
 
                 bj.print()
 
-                self.db.export_bj(bj)
+                self.bj_dao.export(bj)
 
             if is_stop:
                 print('is stop True' + page_url)

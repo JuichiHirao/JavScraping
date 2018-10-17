@@ -2,10 +2,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from time import sleep
-from db import mysql_control
 import urllib.request
 import re
 import os
+from javcore import db
 
 
 class PageData:
@@ -64,13 +64,13 @@ class CollectJav:
         self.path = "http://maddawgjav.net/"
         self.store_path = "D:\DATA\jav-save"
 
-        self.db = mysql_control.DbMysql()
+        self.jav_dao = db.jav.JavDao()
 
     def get_images(self):
 
         start = idx = 1
 
-        javs = self.db.get_url_javs()
+        javs = self.jav_dao.get_where_agreement('WHERE package IS NULL AND download_links IS NULL ORDER BY post_date')
 
         for jav in javs:
             print(str(idx) + '/' + str(len(javs)) + ' ' + jav.url + jav.productNumber)
@@ -102,7 +102,7 @@ class CollectJav:
 
             jav.downloadLinks = ' '.join(page_data.movie_links)
 
-            self.db.update_jav(jav)
+            self.jav_dao.update_collect_info(jav)
 
     def __parse_links(self, entry):
 

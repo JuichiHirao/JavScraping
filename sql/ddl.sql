@@ -153,6 +153,11 @@ INSERT INTO movie_makers (name, match_name, label, kind, match_str, match_produc
 
 INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, p_number_gen, deleted, registered_by)
   values ('MGS', 'MGS', '俺の素人', 1, 'OREGR', '', 0, null, null, 0, 'MANUAL 2018-09-03');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, p_number_gen, deleted, registered_by)
+  values ('チキチキカマー／妄想族', 'チキチキカマー／妄想族', '', 1, 'TIKB', '', 0, null, null, 0, 'MANUAL 2018-10-01');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, p_number_gen, deleted, registered_by)
+  values ('痴女ヘブン', '痴女ヘブン', '', 1, 'CJOD', '', 0, null, null, 0, null);
+
 
 
 

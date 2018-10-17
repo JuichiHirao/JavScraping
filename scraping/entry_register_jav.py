@@ -3,9 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from time import sleep
 from datetime import datetime
-from db import mysql_control
-from data import site_data
-from tool import product_number_register
+from javcore import db
+from javcore import data
+from javcore import tool
 
 
 class EntryRegisterJav:
@@ -20,11 +20,11 @@ class EntryRegisterJav:
 
         self.main_url = "http://maddawgjav.net/"
 
-        self.db = mysql_control.DbMysql()
+        self.jav_dao = db.jav.JavDao()
 
     def register_page(self):
 
-        product_number_tool = product_number_register.ProductNumberRegister()
+        p_number_tool = tool.p_number.ProductNumber()
         start = idx = 1
         end = start + 50
 
@@ -41,7 +41,7 @@ class EntryRegisterJav:
 
             for entry in self.driver.find_elements_by_css_selector('.hentry'):
 
-                jav = site_data.JavData()
+                jav = data.JavData()
                 for h2 in entry.find_elements_by_tag_name('h2'):
                     jav.title = h2.text
                     for a in h2.find_elements_by_tag_name('a'):
@@ -49,7 +49,7 @@ class EntryRegisterJav:
                     # print(jav.url)
                     break
 
-                title_exist = self.db.exist_title(jav.title, 'jav')
+                title_exist = self.jav_dao.is_exist(jav.title)
 
                 if title_exist:
                     is_exist = True
@@ -80,8 +80,6 @@ class EntryRegisterJav:
                     if "レーベル" in one:
                         jav.label = jav.get_text(one)
 
-                # print("date [" + str(sell_date) + "] actress [" + actress + "] maker [" + maker + "]  label [" + label + "]")
-
                 for span in entry.find_elements_by_css_selector('.post-info-top'):
                     str_date = span.find_element_by_tag_name('a').text
                     str_time = span.find_element_by_tag_name('a').get_attribute('title')
@@ -90,20 +88,16 @@ class EntryRegisterJav:
                     jav.postDate = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
                     # print(post_date)
 
-                # for a in entry.find_elements_by_css_selector('.more-link'):
-                #     jav.url = a.get_attribute('href')
-
-                jav.productNumber, seller, sell_date, match_maker, is_parse2 = product_number_tool.parse2(jav, True)
+                jav.productNumber, seller, sell_date, match_maker, is_parse2 = p_number_tool.parse_and_fc2(jav, True)
                 if seller is not None and len(seller) > 0:
                     jav.label = seller
                     jav.sellDate = sell_date
                 if match_maker is not None:
                     jav.makersId = match_maker.id
                 jav.isParse2 = is_parse2
-                # jav.productNumber = product_number_tool.parse(jav.title)
                 jav.print()
 
-                self.db.export_jav(jav)
+                self.jav_dao.export(jav)
 
             if is_exist:
                 print('end2 page ' + str(idx))
