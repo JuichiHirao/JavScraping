@@ -22,11 +22,14 @@ class EntryRegisterJav:
 
         self.jav_dao = db.jav.JavDao()
 
+        self.err_list = []
+
     def register_page(self):
 
         p_number_tool = tool.p_number.ProductNumber()
         start = idx = 1
         end = start + 50
+        exist_cnt = 0
 
         is_exist = False
 
@@ -39,6 +42,7 @@ class EntryRegisterJav:
             if idx == start:
                 sleep(8)
 
+            is_exist = False
             for entry in self.driver.find_elements_by_css_selector('.hentry'):
 
                 jav = data.JavData()
@@ -95,17 +99,25 @@ class EntryRegisterJav:
                 if match_maker is not None:
                     jav.makersId = match_maker.id
                 jav.isParse2 = is_parse2
+                if jav.isParse2 < 0:
+                    self.err_list.append('  ' + str(jav.isParse2) + ' [' + jav.productNumber + '] ' + jav.title)
                 jav.print()
 
                 self.jav_dao.export(jav)
 
             if is_exist:
-                print('end2 page ' + str(idx))
+                print('exist title ' + jav.title)
+                exist_cnt = exist_cnt + 1
+
+            if exist_cnt >= 20:
                 break
 
             idx = idx + 1
 
         self.driver.close()
+
+        for error in self.err_list:
+            print(error)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from time import sleep
+from datetime import datetime
 import urllib.request
 import re
 import os
@@ -14,26 +15,6 @@ class PageData:
         self.package_links = []
         self.thumbnail_links = []
         self.movie_links = []
-
-    def get_package_links(self):
-        join_link = ''
-        for idx, link in enumerate(self.package_links):
-            if idx == 0:
-                join_link = link[link.rfind("/") + 1:]
-            else:
-                join_link = join_link + ' ' + link[link.rfind("/") + 1:]
-
-        return join_link
-
-    def get_thumbnail_links(self):
-        join_link = ''
-        for idx, link in enumerate(self.thumbnail_links):
-            if idx == 0:
-                join_link = link[link.rfind("/") + 1:]
-            else:
-                join_link = join_link + ' ' + link[link.rfind("/") + 1:]
-
-        return join_link
 
     def print(self):
         if len(self.package_links) >= 1:
@@ -90,19 +71,18 @@ class CollectJav:
         for e in driver.find_elements_by_css_selector('.entry'):
             page_data = self.__parse_links(e)
 
-            if self.__download_package(page_data.package_links):
-                jav.package = page_data.get_package_links()
-            else:
+            jav.package = self.__download_package(page_data.package_links)
+            if len(jav.package) <= 0:
                 print('  package image error')
 
-            if self.__download_thumbnails(page_data.thumbnail_links):
-                jav.thumbnail = page_data.get_thumbnail_links()
-            else:
+            jav.thumbnail = self.__download_thumbnails(page_data.thumbnail_links)
+            if len(jav.thumbnail) <= 0:
                 print('  thumbnail image error')
 
             jav.downloadLinks = ' '.join(page_data.movie_links)
 
             self.jav_dao.update_collect_info(jav)
+            break
 
     def __parse_links(self, entry):
 
@@ -150,19 +130,31 @@ class CollectJav:
 
         is_download = False
 
+        arr_dl_files = []
         for link in links:
             filename = link[link.rfind("/") + 1:]
             pathname = os.path.join(self.store_path, filename)
+            if os.path.isfile(pathname):
+                now_date = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+                pathname = os.path.join(self.store_path, now_date + '_' + filename)
             try:
                 urllib.request.urlretrieve(link, pathname)
                 is_download = True
             except:
+                is_download = False
                 print('except error')
+                break
+            arr_dl_files.append(pathname)
 
-        return is_download
+        dl_filenames = ''
+        if is_download:
+            dl_filenames = ' '.join(arr_dl_files)
+
+        return dl_filenames
 
     def __download_thumbnails(self, links):
 
+        arr_dl_files = []
         for link in links:
             self.driver.get(link)
 
@@ -179,36 +171,46 @@ class CollectJav:
                 for win in all_handles:
                     print('  win ' + str(win))
                     self.driver.switch_to.window(win)
-                    self.__download_image(self.driver, link)
-
+                    dl_filename = self.__download_image(self.driver, link)
+                    arr_dl_files.append(dl_filename)
                     break
 
             except:
                 try:
                     print('  not popup page')
-                    self.__download_image(self.driver, link)
+                    dl_filename = self.__download_image(self.driver, link)
+                    arr_dl_files.append(dl_filename)
+                    break
 
                 except:
                     print('  except thumbnail file 404 not found')
 
         is_download = True
 
-        for link in links:
-            filename_th = link[link.rfind("/") + 1:]
-            pathname_th = os.path.join(self.store_path, filename_th)
-            if not os.path.exists(pathname_th):
+        for filename in arr_dl_files:
+            if not os.path.exists(filename):
                 is_download = False
                 break
 
-        return is_download
+        dl_filenames = ''
+        if is_download:
+            dl_filenames = ' '.join(arr_dl_files)
+
+        return dl_filenames
 
     def __download_image(self, driver, link):
+
         thumbnail_url = driver.find_element_by_id('image').get_attribute('src')
 
         filename = link[link.rfind("/") + 1:]
         pathname = os.path.join(self.store_path, filename)
+        if os.path.isfile(pathname):
+            now_date = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            pathname = os.path.join(self.store_path, now_date + '_' + filename)
         print('    img_th ' + filename + ' ' + thumbnail_url)
         urllib.request.urlretrieve(thumbnail_url, pathname)
+
+        return pathname
 
 
 if __name__ == '__main__':

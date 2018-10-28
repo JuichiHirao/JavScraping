@@ -1,10 +1,8 @@
 # coding:utf-8
 import urllib.request
-from db import mysql_control
 import os
 from time import sleep
 from javcore import db
-from javcore import data
 
 
 class CollectImageBj:
@@ -12,8 +10,6 @@ class CollectImageBj:
     def __init__(self):
 
         self.store_path = "D:\\DATA\\bj-jpeg"
-
-        self.db = mysql_control.DbMysql()
 
         self.bj_dao = db.bj.BjDao()
         self.bjs = self.bj_dao.get_where_agreement('WHERE is_downloads IS NULL OR is_downloads = 0 ORDER BY post_date')
