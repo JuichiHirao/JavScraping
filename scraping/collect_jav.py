@@ -144,7 +144,7 @@ class CollectJav:
                 is_download = False
                 print('except error')
                 break
-            arr_dl_files.append(pathname)
+            arr_dl_files.append(filename)
 
         dl_filenames = ''
         if is_download:
@@ -188,7 +188,8 @@ class CollectJav:
         is_download = True
 
         for filename in arr_dl_files:
-            if not os.path.exists(filename):
+            pathname = os.path.join(self.store_path, filename)
+            if not os.path.exists(pathname):
                 is_download = False
                 break
 
@@ -210,7 +211,7 @@ class CollectJav:
         print('    img_th ' + filename + ' ' + thumbnail_url)
         urllib.request.urlretrieve(thumbnail_url, pathname)
 
-        return pathname
+        return filename
 
 
 if __name__ == '__main__':
