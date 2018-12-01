@@ -81,10 +81,15 @@ class WikiSearch:
             len_wikis = len(wikis)
 
             if len_wikis > 0:
+                wiki_list = []
                 for idx, wiki in enumerate(wikis):
                     a = wiki.find('a')
-                    url = a.get_attribute('href')
-                    print(url)
+                    # print(str(idx), str(a))
+                    url = a['href']
+                    wiki_list.append(a.text + ' ' + url)
+                    # print(a.text + ' ' + url)
+
+                print('\n'.join(wiki_list))
             else:
                 print(len(wikis))
 
