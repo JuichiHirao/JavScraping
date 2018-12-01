@@ -155,9 +155,11 @@ class TestEntryRegisterJav:
 
     def get_single(self):
 
-        jav = self.db.get_jav_by_id(1372)
+        sql_where = 'WHERE id = ' + str(11356)
+        javs = self.jav_dao.get_where_agreement(sql_where)
         # jav.title = jav.title + ' ' + jav.package
         # jav = self.db.get_jav_by_id(313)
+        jav = javs[0]
         jav.print()
         p_number_tool = tool.p_number.ProductNumber()
 
@@ -193,10 +195,10 @@ class TestEntryRegisterJav:
 
 if __name__ == '__main__':
     entry_register = TestEntryRegisterJav()
-    # entry_register.get_single()
+    entry_register.get_single()
     # entry_register.get_jav_where_agreement()
     # entry_register.get_hey()
-    entry_register.test_parse_product_number()
+    # entry_register.test_parse_product_number()
     # entry_register.test_parse_product_number_retry_error()
     # entry_register.test_update_download_link()
     # entry_register.get_single_from_import()

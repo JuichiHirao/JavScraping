@@ -158,9 +158,20 @@ INSERT INTO maker (name, match_name, label, kind, match_str, match_product_numbe
 INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, replace_words, p_number_gen, deleted, registered_by)
   values ('痴女ヘブン', '痴女ヘブン', '', 1, 'CJOD', '', 0, null, null, 0, null);
 
-
-
-
 ALTER TABLE makers RENAME maker;
 
 SELECT COUNT(*) FROM jav WHERE jav.is_selection = 1;
+
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', '一番槍', 3, '(4156|一番槍)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-10-30');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', '＊無許可中出し＊', 3, '(4193|ナンパ師TOKIの素人隠し撮り紀行)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-02');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', 'ジローの本物の素人流出動画', 3, '(4192|ジローの本物の素人流出動画)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-07');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', 'BMG boy meets girl', 3, '(4194|BMG boy meets girl)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-10');
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', '素人ハメ撮りホイホイ', 3, '(4195|素人ハメ撮りホイホイ)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-10');
+
+INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
+  VALUES ('HEY動画', 'HEY動画', 'AV志向', 3, '(4153|AV志向)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-29');
