@@ -1,5 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 import urllib.request
 import re
 from bs4 import BeautifulSoup
@@ -11,11 +9,7 @@ class EntryRegisterJav2:
 
     def __init__(self):
 
-        options = Options()
-        options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
         self.main_url = 'http://javarchive.com/'
-        # self.main_url = 'http://javarchive.com/category/av-censored/'
 
         self.jav_dao = db.jav.JavDao()
         self.jav2_dao = db.jav2.Jav2Dao()

@@ -1,21 +1,17 @@
 # coding:utf-8
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from datetime import datetime
 import re
 from javcore import db
 from javcore import data
+from javcore import common
 
 
 class AutoMakerRegister:
 
     def __init__(self):
 
-        options = Options()
-        options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
-
-        # self.main_url = "http://maddawgjav.net/"
+        self.env = common.Environment()
+        self.driver = self.env.get_driver()
 
         self.jav_dao = db.jav.JavDao()
         self.maker_dao = db.maker.MakerDao()

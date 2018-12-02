@@ -1,21 +1,19 @@
 # coding:utf-8
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from time import sleep
 import iso8601
 import re
 import yaml
 from javcore import db
 from javcore import data
+from javcore import common
 
 
 class EntryRegisterBj:
 
     def __init__(self):
 
-        options = Options()
-        options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
+        self.env = common.Environment()
+        self.driver = self.env.get_driver()
 
         with open('site_bj.yml') as file:
             obj = yaml.load(file)
@@ -81,8 +79,6 @@ class EntryRegisterBj:
                     if re.search('uploadgig.com', contents_link):
                         bj.downloadLink = contents_link
 
-                # <img class="alignnone size-full wp-image-49866 aligncenter" src="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610.jpg" alt="" width="1004" height="680" srcset="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610.jpg 1004w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610-300x203.jpg 300w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-2018070610-768x520.jpg 768w" sizes="(max-width: 1004px) 100vw, 1004px">
-                # <img class="alignnone size-full wp-image-49867 aligncenter" src="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-20180706102.jpg" alt="" width="992" height="682" srcset="http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-20180706102.jpg 992w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-20180706102-300x206.jpg 300w, http://www.cam18.top/wp-content/uploads/2018/07/KOREAN-BJ-20180706102-768x528.jpg 768w" sizes="(max-width: 992px) 100vw, 992px">
                 img_links = []
                 for img in entry.find_elements_by_tag_name('img'):
                     img_link = img.get_attribute('src')

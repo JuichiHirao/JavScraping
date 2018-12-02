@@ -1,22 +1,17 @@
-# coding:utf-8
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from time import sleep
 from datetime import datetime
 from javcore import db
 from javcore import data
 from javcore import tool
+from javcore import common
 
 
 class EntryRegisterJav:
 
     def __init__(self):
 
-        # http://maddawgjav.net/
-        # http://maddawgjav.net/page/2/
-        options = Options()
-        options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
+        self.env = common.Environment()
+        self.driver = self.env.get_driver()
 
         self.main_url = "http://maddawgjav.net/"
 

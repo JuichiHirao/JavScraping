@@ -1,12 +1,11 @@
 # coding:utf-8
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from time import sleep
 from datetime import datetime
 import urllib.request
 import re
 import os
 from javcore import db
+from javcore import common
 
 
 class PageData:
@@ -35,15 +34,11 @@ class CollectJav:
 
     def __init__(self):
 
-        # http://maddawgjav.net/
-        # http://maddawgjav.net/page/2/
-        options = Options()
-        options.add_argument('--headless')
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path='c:\\SHARE\\chromedriver.exe')
-        # self.driver = webdriver.Chrome(chrome_options=options)
+        self.env = common.Environment()
+        self.driver = self.env.get_driver()
 
         self.path = "http://maddawgjav.net/"
-        self.store_path = "D:\DATA\jav-save"
+        self.store_path = self.env.get_image_path()
 
         self.jav_dao = db.jav.JavDao()
 
