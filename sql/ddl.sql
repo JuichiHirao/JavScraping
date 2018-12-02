@@ -175,3 +175,7 @@ INSERT INTO maker (name, match_name, label, kind, match_str, match_product_numbe
 
 INSERT INTO maker (name, match_name, label, kind, match_str, match_product_number, site_kind, p_number_gen, replace_words, registered_by)
   VALUES ('HEY動画', 'HEY動画', 'AV志向', 3, '(4153|AV志向)', 'PPV[0-9]{3}', 0, 1, 'PPV', 'MANUAL 2018-11-29');
+
+ALTER TABLE jav ADD search_result TEXT AFTER makers_id;
+ALTER TABLE import ADD search_result TEXT AFTER download_files;
+
