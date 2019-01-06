@@ -179,3 +179,8 @@ INSERT INTO maker (name, match_name, label, kind, match_str, match_product_numbe
 ALTER TABLE jav ADD search_result TEXT AFTER makers_id;
 ALTER TABLE import ADD search_result TEXT AFTER download_files;
 
+-- ALTER TABLE jav2 ADD product_number VARCHAR(255) AFTER detail;
+ALTER TABLE jav2 ADD files_info TEXT AFTER download_links;
+ALTER TABLE jav2 ADD post_date TEXT AFTER title;
+ALTER TABLE jav2 ADD package TEXT AFTER post_date;
+ALTER TABLE jav2 ADD thumbnail TEXT AFTER package;
