@@ -36,6 +36,7 @@ class EntryRegisterJav2:
                 print('')
 
                 self.register_download_url3(url, sub_url)
+                break
 
     def main2(self):
 
@@ -109,6 +110,11 @@ class EntryRegisterJav2:
 
                 h2 = entry.find('h2', class_='entry-title')
                 jav2_data.title = h2.find('a').text
+
+                if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
+                    print('title exists [' + jav2_data.title + '] kind [' + jav2_data.kind)
+                    continue
+
                 print(jav2_data.title)
                 print('  ' + jav2_data.url)
 
@@ -345,7 +351,7 @@ class EntryRegisterJav2:
 
 if __name__ == '__main__':
     jav2 = EntryRegisterJav2()
-    jav2.main()
-    jav2.main2()
+    # jav2.main()
+    # jav2.main2()
     jav2.main3()
 
