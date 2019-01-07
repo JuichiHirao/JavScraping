@@ -4,6 +4,7 @@ from datetime import datetime
 import urllib.request
 import re
 import os
+from bs4 import BeautifulSoup
 from javcore import db
 from javcore import common
 
@@ -74,6 +75,27 @@ class CollectJav:
             if len(jav.thumbnail) <= 0:
                 print('  thumbnail image error')
 
+            file_info_list = []
+            for movie_link in page_data.movie_links:
+                with urllib.request.urlopen(movie_link) as response:
+                    html = response.read()
+                    html_soup = BeautifulSoup(html, "html.parser")
+                    file_div = html_soup.find('div', class_='btm')
+                    strong_list = file_div.find_all('strong')
+                    file_size = ''
+                    for data in strong_list:
+                        if re.search('[0-9\.]{1,10}[\sMGB]*', data.text):
+                            file_size = data.text
+                            break
+
+                    filename = file_div.find('a').text.strip()
+
+                    file_info_list.append(filename + ' - ' + file_size)
+                    # print(file_size + ' ' + filename + ' ' + movie_link)
+
+            jav.filesInfo = '、'.join(file_info_list)
+            print('file_info')
+            print('  【' + str(jav.filesInfo) + '】')
             jav.downloadLinks = ' '.join(page_data.movie_links)
 
             self.jav_dao.update_collect_info(jav)

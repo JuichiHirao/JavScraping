@@ -184,3 +184,5 @@ ALTER TABLE jav2 ADD files_info TEXT AFTER download_links;
 ALTER TABLE jav2 ADD post_date TEXT AFTER title;
 ALTER TABLE jav2 ADD package TEXT AFTER post_date;
 ALTER TABLE jav2 ADD thumbnail TEXT AFTER package;
+
+ALTER TABLE jav ADD files_info TEXT AFTER download_files;
