@@ -15,11 +15,14 @@ class EntryRegisterJav2:
 
         self.jav_dao = db.jav.JavDao()
         self.jav2_dao = db.jav2.Jav2Dao()
+        self.exist_max = 30
+        self.exist_cnt = 0
 
     def main3(self):
 
         idx = start = 1
         end = start + 50
+        self.exist_cnt = 0
 
         self.main_url = 'https://www.hd-auto.com/'
         # sub_urls = ['category/mosaic/', 'category/avi/']
@@ -36,12 +39,16 @@ class EntryRegisterJav2:
                 print('')
 
                 self.register_download_url3(url, sub_url)
-                break
+
+                if self.exist_cnt > self.exist_max:
+                    print('page exist_max [' + str(self.exist_max) + ']  over')
+                    return
 
     def main2(self):
 
         idx = start = 1
         end = start + 30
+        self.exist_cnt = 0
 
         self.main_url = 'https://javfree.me/'
         # sub_urls = ['category/mosaic/', 'category/avi/']
@@ -59,10 +66,15 @@ class EntryRegisterJav2:
 
                 self.register_download_url2(url, sub_url)
 
+                if self.exist_cnt > self.exist_max:
+                    print('page exist_max [' + str(self.exist_max) + ']  over')
+                    return
+
     def main(self):
 
         idx = start = 1
         end = start + 30
+        self.exist_cnt = 0
 
         self.main_url = 'http://javarchive.com/'
         sub_urls = ['category/av-censored/', 'category/av-uncensored/', 'category/av-idols/']
@@ -79,6 +91,10 @@ class EntryRegisterJav2:
                 print('')
 
                 self.register_download_url(url, sub_url)
+
+                if self.exist_cnt > self.exist_max:
+                    print('page exist_max [' + str(self.exist_max) + ']  over')
+                    return
 
     def register_download_url3(self, main_url, sub_url):
 
@@ -111,8 +127,13 @@ class EntryRegisterJav2:
                 h2 = entry.find('h2', class_='entry-title')
                 jav2_data.title = h2.find('a').text
 
+                if self.exist_cnt > self.exist_max:
+                    print('exist_max [' + str(self.exist_max) + ']  over')
+                    return
+
                 if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
                     print('title exists [' + jav2_data.title + '] kind [' + jav2_data.kind)
+                    self.exist_cnt = self.exist_cnt + 1
                     continue
 
                 print(jav2_data.title)
@@ -198,10 +219,14 @@ class EntryRegisterJav2:
                 print(jav2_data.title)
                 jav2_data.kind = sub_url
 
+                if self.exist_cnt > self.exist_max:
+                    print('exist_max [' + str(self.exist_max) + ']  over')
+                    return
+
                 if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
                     print('title exists [' + jav2_data.title + '] kind [' + jav2_data.kind)
+                    self.exist_cnt = self.exist_cnt + 1
                     continue
-                    # return True
 
                 print('  ' + sub_url + '  ' + jav2_data.url)
                 with urllib.request.urlopen(jav2_data.url) as response:
@@ -266,8 +291,13 @@ class EntryRegisterJav2:
                         if 'ENCODE720P' in jav2_data.title:
                             continue
 
+                        if self.exist_cnt > self.exist_max:
+                            print('exist_max [' + str(self.exist_max) + ']  over')
+                            return
+
                         if self.jav2_dao.is_exist(jav2_data.title):
                             print('title exists [' + jav2_data.title + ']')
+                            self.exist_cnt = self.exist_cnt + 1
                             continue
 
                         jav2_data.url = a_link.attrs['href']
@@ -351,7 +381,7 @@ class EntryRegisterJav2:
 
 if __name__ == '__main__':
     jav2 = EntryRegisterJav2()
-    # jav2.main()
-    # jav2.main2()
+    jav2.main()
+    jav2.main2()
     jav2.main3()
 
