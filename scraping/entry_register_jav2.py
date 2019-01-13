@@ -74,11 +74,11 @@ class EntryRegisterJav2:
 
         idx = start = 1
         end = start + 30
-        self.exist_cnt = 0
 
         self.main_url = 'http://javarchive.com/'
         sub_urls = ['category/av-censored/', 'category/av-uncensored/', 'category/av-idols/']
         for sub_url in sub_urls:
+            self.exist_cnt = 0
             # sub_url = 'category/av-idols/'
             for idx in range(start, end):
 
@@ -94,7 +94,7 @@ class EntryRegisterJav2:
 
                 if self.exist_cnt > self.exist_max:
                     print('page exist_max [' + str(self.exist_max) + ']  over')
-                    return
+                    break
 
     def register_download_url3(self, main_url, sub_url):
 
@@ -352,16 +352,19 @@ class EntryRegisterJav2:
 
                                     link_list.append(content.attrs['href'])
 
-                                    with urllib.request.urlopen(content.attrs['href']) as response:
-                                        html_sub = response.read()
-                                        html_soup_sub = BeautifulSoup(html_sub, "html.parser")
-                                        div_title = html_soup_sub.find('div', class_="title")
-                                        h1_title = div_title.find('h1')
-                                        a_title = h1_title.find('a')
-                                        small_title = h1_title.find('small')
-                                        file_list.append(a_title.text + ' - ' + small_title.text)
-                                        # if 'Get Premium' in h1.text:
-                                        #     continue
+                                    try:
+                                        with urllib.request.urlopen(content.attrs['href']) as response:
+                                            html_sub = response.read()
+                                            html_soup_sub = BeautifulSoup(html_sub, "html.parser")
+                                            div_title = html_soup_sub.find('div', class_="title")
+                                            h1_title = div_title.find('h1')
+                                            a_title = h1_title.find('a')
+                                            small_title = h1_title.find('small')
+                                            file_list.append(a_title.text + ' - ' + small_title.text)
+                                            # if 'Get Premium' in h1.text:
+                                            #     continue
+                                    except urllib.error.HTTPError as e:
+                                        print('HTTPError' + str(e))
                                 elif img_match:
                                     jav2_data.thumbnail = content.attrs['href']
 
