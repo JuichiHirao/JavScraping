@@ -1,5 +1,6 @@
 import urllib.request
 import re
+import sys
 import iso8601
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -319,7 +320,14 @@ class EntryRegisterJav2:
                                 str_post_date = re.sub('(th|rd|nd),', ',', m_post_date.group('match_str'))
                                 print('  m_post_date [' + str_post_date + ']')
                                 # print('  m_post_date [' + str(m_post_date.group()) + ']')
-                                jav2_data.postDate = datetime.strptime(str_post_date, '%B %d, %Y %I:%M %p')
+                                try:
+                                    m_post = re.search('[0-9][a-z]{2}, ', str_post_date)
+                                    if m_post:
+                                        str_post_date = str_post_date.replace(m_post.group(), ', ')
+                                    jav2_data.postDate = datetime.strptime(str_post_date, '%B %d, %Y %I:%M %p')
+                                except ValueError as ve:
+                                    print(sys.exc_info())
+
 
                             # str_datetime = str_date + ' ' + str_time
 
