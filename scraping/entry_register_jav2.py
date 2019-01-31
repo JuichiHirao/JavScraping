@@ -48,7 +48,7 @@ class EntryRegisterJav2:
     def main2(self):
 
         idx = start = 1
-        end = start + 30
+        end = start + 50
         self.exist_cnt = 0
 
         self.main_url = 'https://javfree.me/'
@@ -74,7 +74,7 @@ class EntryRegisterJav2:
     def main(self):
 
         idx = start = 1
-        end = start + 30
+        end = start + 50
 
         self.main_url = 'http://javarchive.com/'
         sub_urls = ['category/av-censored/', 'category/av-uncensored/', 'category/av-idols/']
@@ -91,7 +91,12 @@ class EntryRegisterJav2:
                 print(url)
                 print('')
 
-                self.register_download_url(url, sub_url)
+                try:
+                    self.register_download_url(url, sub_url)
+                except urllib.error.HTTPError as err:
+                    print('url ' + url)
+                    print('sub_url ' + sub_url)
+                    return
 
                 if self.exist_cnt > self.exist_max:
                     print('page exist_max [' + str(self.exist_max) + ']  over')
@@ -118,15 +123,26 @@ class EntryRegisterJav2:
                         jav2_data.kind = class_name
 
                 entry = article.find('div', class_='archive-content')
-                a_link = entry.find('a')
-                if 'href' in a_link.attrs:
-                    jav2_data.url = a_link.attrs['href']
 
-                # if len(jav2_data.url) <= 0:
-                #     continue
+                if entry is not None:
+                    a_link = entry.find('a')
+                    if 'href' in a_link.attrs:
+                        jav2_data.url = a_link.attrs['href']
 
-                h2 = entry.find('h2', class_='entry-title')
-                jav2_data.title = h2.find('a').text
+                    # if len(jav2_data.url) <= 0:
+                    #     continue
+
+                    # h2 = entry.find('h2', class_='entry-title')
+                    h2 = entry.find('h2', class_='entry-title')
+                    jav2_data.title = h2.find('a').text
+                else:
+                    h2_header = article.find('header', class_='entry-header')
+                    a_link = h2_header.find('a')
+                    if 'href' in a_link.attrs:
+                        jav2_data.url = a_link.attrs['href']
+
+                    h2 = h2_header.find('h2', class_='entry-title')
+                    jav2_data.title = h2.find('a').text
 
                 if self.exist_cnt > self.exist_max:
                     print('exist_max [' + str(self.exist_max) + ']  over')

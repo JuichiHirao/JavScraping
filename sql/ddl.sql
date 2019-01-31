@@ -186,3 +186,5 @@ ALTER TABLE jav2 ADD package TEXT AFTER post_date;
 ALTER TABLE jav2 ADD thumbnail TEXT AFTER package;
 
 ALTER TABLE jav ADD files_info TEXT AFTER download_files;
+
+SELECT * FROM jav WHERE package like 'h_213%417%';
