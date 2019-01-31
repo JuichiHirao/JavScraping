@@ -19,6 +19,32 @@ class EntryRegisterJav2:
         self.exist_max = 30
         self.exist_cnt = 0
 
+    def main4(self):
+
+        idx = start = 1
+        end = start + 100
+        self.exist_cnt = 0
+
+        self.main_url = 'http://hdblog.me/'
+        # sub_urls = ['category/mosaic/', 'category/avi/']
+        sub_urls = ['']
+        for sub_url in sub_urls:
+            for idx in range(start, end):
+
+                if idx == 1:
+                    url = self.main_url + sub_url
+                else:
+                    url = self.main_url + sub_url + 'page/' + str(idx)
+                print('')
+                print(url)
+                print('')
+
+                self.register_download_url3(url, sub_url)
+
+                if self.exist_cnt > self.exist_max:
+                    print('page exist_max [' + str(self.exist_max) + ']  over')
+                    return
+
     def main3(self):
 
         idx = start = 1
@@ -102,6 +128,120 @@ class EntryRegisterJav2:
                     print('page exist_max [' + str(self.exist_max) + ']  over')
                     break
 
+    def register_download_url4(self, main_url, sub_url):
+
+        opener = urllib.request.build_opener()
+        opener.addheaders = [('User-Agent',
+                              'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+        urllib.request.install_opener(opener)
+
+        with urllib.request.urlopen(main_url) as response:
+            html = response.read()
+            html_soup = BeautifulSoup(html, "html.parser")
+            # entrys = html_soup.find_all('div', class_='hentry')
+            # entrys = html_soup.find_all('div', class_='archive-content')
+            article_list = html_soup.find_all('article')
+            # for idx, entry in enumerate(entrys):
+            for idx, article in enumerate(article_list):
+                jav2_data = data.Jav2Data()
+                for class_name in article.attrs['class']:
+                    if 'category-' in class_name:
+                        jav2_data.kind = class_name
+
+                entry = article.find('div', class_='archive-content')
+
+                if entry is not None:
+                    a_link = entry.find('a')
+                    if 'href' in a_link.attrs:
+                        jav2_data.url = a_link.attrs['href']
+
+                    # if len(jav2_data.url) <= 0:
+                    #     continue
+
+                    # h2 = entry.find('h2', class_='entry-title')
+                    h2 = entry.find('h2', class_='entry-title')
+                    jav2_data.title = h2.find('a').text
+                else:
+                    h2_header = article.find('header', class_='entry-header')
+                    a_link = h2_header.find('a')
+                    if 'href' in a_link.attrs:
+                        jav2_data.url = a_link.attrs['href']
+
+                    h2 = h2_header.find('h2', class_='entry-title')
+                    jav2_data.title = h2.find('a').text
+
+                if self.exist_cnt > self.exist_max:
+                    print('exist_max [' + str(self.exist_max) + ']  over')
+                    return
+
+                if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
+                    print('title exists [' + jav2_data.title + '] kind [' + jav2_data.kind)
+                    self.exist_cnt = self.exist_cnt + 1
+                    continue
+
+                print(jav2_data.title)
+                print('  ' + jav2_data.url)
+
+                with urllib.request.urlopen(jav2_data.url) as response:
+                    html_sub = response.read()
+                    html_soup_sub = BeautifulSoup(html_sub, "html.parser")
+
+                    # <time class="entry-date" datetime="2018-07-07T08:21:46+00:00">2018-07-07</time>
+                    time = html_soup_sub.find('time', class_='entry-time')
+                    iso_str = time.attrs['datetime']
+                    jav2_data.postDate = iso8601.parse_date(iso_str)
+
+                    post_content = html_soup_sub.find('div', class_="entry-content")
+                    outline = []
+                    p_list = post_content.find_all('p')
+                    for p in p_list:
+                        p_text = p.text
+                        if jav2_data.title == p_text.strip():
+                            continue
+                        lines = p_text.splitlines()
+                        for line in lines:
+                            arr_detail = line.split('：')
+                            if len(arr_detail) >= 1:
+                                if 'Preview:' in arr_detail[0] or 'Btafile:' in arr_detail[0]:
+                                    break
+                                if len(arr_detail) == 1:
+                                    line = arr_detail[0].strip()
+                                elif len(arr_detail) >= 2:
+                                    line = arr_detail[0].strip() + ':' + arr_detail[1].strip()
+                            print('    ' + line)
+                            if len(line.strip()) <= 0:
+                                continue
+                            outline.append(line)
+                    jav2_data.detail = '、'.join(outline)
+
+                    pkg_src = post_content.find('img')
+                    jav2_data.package = pkg_src.attrs['src']
+
+                    # site_main = html_soup_sub.find_all('div', class_='site-main')
+                    a_links = html_soup_sub.find_all('a')
+                    # a_links = site_main.find_all('a')
+                    link_list = []
+                    files_list = []
+                    thumbnail_list = []
+                    for idx, link in enumerate(a_links):
+                        content_link = link.attrs['href']
+                        if 'btafile.com' in content_link:
+                            link_list.append(content_link)
+                            files_list.append(link.text)
+                            # print(content_link)
+                            print('    ' + link.text + ' <-- ' + content_link)
+                        if 'pixhost.to' in content_link:
+                            thumbnail_list.append(content_link)
+
+                    jav2_data.downloadLinks = ' '.join(link_list)
+                    jav2_data.filesInfo = '、'.join(files_list)
+                    jav2_data.thumbnail = ' '.join(thumbnail_list)
+                    jav2_data.print()
+
+                self.jav2_dao.export(jav2_data)
+
+            return False
+
     def register_download_url3(self, main_url, sub_url):
 
         opener = urllib.request.build_opener()
@@ -161,7 +301,7 @@ class EntryRegisterJav2:
                     html_soup_sub = BeautifulSoup(html_sub, "html.parser")
 
                     # <time class="entry-date" datetime="2018-07-07T08:21:46+00:00">2018-07-07</time>
-                    time = html_soup_sub.find('time', class_='entry-date')
+                    time = html_soup_sub.find('time', class_='entry-time')
                     iso_str = time.attrs['datetime']
                     jav2_data.postDate = iso8601.parse_date(iso_str)
 
@@ -408,7 +548,8 @@ class EntryRegisterJav2:
 
 if __name__ == '__main__':
     jav2 = EntryRegisterJav2()
-    jav2.main()
-    jav2.main2()
-    jav2.main3()
+    # jav2.main()
+    # jav2.main2()
+    # jav2.main3()
+    jav2.main4()
 
