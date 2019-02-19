@@ -87,16 +87,12 @@ class EntryRegisterJav:
                     jav.postDate = datetime.strptime(str_datetime, '%B %d, %Y %I:%M %p')
                     # print(post_date)
 
-                jav.productNumber, seller, sell_date, match_maker, is_parse2 = p_number_tool.parse_and_fc2(jav, True)
-                if seller is not None and len(seller) > 0:
-                    jav.label = seller
-                    jav.sellDate = sell_date
-                if match_maker is not None:
-                    jav.makersId = match_maker.id
-                jav.isParse2 = is_parse2
+                jav.productNumber, match_maker, jav.isParse2 = p_number_tool.parse(jav, True)
                 if jav.isParse2 < 0:
                     self.err_list.append('  ' + str(jav.isParse2) + ' [' + jav.productNumber + '] ' + jav.title)
-                jav.print()
+
+                if match_maker is not None:
+                    jav.makersId = match_maker.id
 
                 self.jav_dao.export(jav)
 
