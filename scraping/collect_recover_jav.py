@@ -3,6 +3,8 @@ from datetime import datetime
 import urllib.request
 import re
 import os
+import sys
+import selenium.common.exceptions
 from bs4 import BeautifulSoup
 from javcore import db
 from javcore import common
@@ -47,7 +49,8 @@ class CollectJav:
         start = idx = 1
 
         # javs = self.jav_dao.get_where_agreement('WHERE package IS NULL AND download_links IS NULL ORDER BY post_date')
-        javs = self.jav_dao.get_where_agreement('WHERE (package = \'\' or thumbnail = \'\') and created_at >= \'2019-01-20\' ORDER BY post_date')
+        javs = self.jav_dao.get_where_agreement('WHERE (package = \'\' or thumbnail = \'\') and created_at >= \'2019-04-01\' ORDER BY post_date')
+        # javs = self.jav_dao.get_where_agreement('WHERE id = 24583')
 
         for jav in javs:
             print(str(idx) + '/' + str(len(javs)) + ' ' + jav.url + jav.productNumber)
@@ -77,7 +80,7 @@ class CollectJav:
                 if len(jav.thumbnail) <= 0:
                     print('  thumbnail image error')
 
-            if len(jav.downloadLinks.strip()) <= 0:
+            if jav.downloadLinks is not None and len(jav.downloadLinks.strip()) <= 0:
                 file_info_list = []
                 for movie_link in page_data.movie_links:
                     with urllib.request.urlopen(movie_link) as response:
@@ -112,7 +115,7 @@ class CollectJav:
         is_hlink = False
         for a in entry.find_elements_by_tag_name('a'):
             contents_link = a.get_attribute('href')
-            if re.match('.*jpg$', contents_link):
+            if re.match('.*jpg$|.*jpeg$', contents_link):
                 page_data.thumbnail_links.append(contents_link)
             if re.match('.*rapid.*', contents_link):
                 page_data.movie_links.append(contents_link)
@@ -196,6 +199,7 @@ class CollectJav:
                     break
 
             except:
+                print(sys.exc_info())
                 try:
                     print('  not popup page')
                     dl_filename = self.__download_image(self.driver, link)
@@ -221,7 +225,14 @@ class CollectJav:
 
     def __download_image(self, driver, link):
 
-        thumbnail_url = driver.find_element_by_id('image').get_attribute('src')
+        thumbnail_url = ''
+        try:
+            image_id = driver.find_element_by_id('image')
+        except selenium.common.exceptions.NoSuchElementException:
+            image_id = driver.find_element_by_tag_name('img')
+
+        if image_id is not None:
+            thumbnail_url = image_id.get_attribute('src')
 
         filename = link[link.rfind("/") + 1:]
         pathname = os.path.join(self.store_path, filename)

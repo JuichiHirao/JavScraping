@@ -100,7 +100,7 @@ class EntryRegisterJav:
                 print('exist title ' + jav.title)
                 exist_cnt = exist_cnt + 1
 
-            if exist_cnt >= 20:
+            if exist_cnt >= 60:
                 break
 
             idx = idx + 1

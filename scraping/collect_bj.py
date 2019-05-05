@@ -9,7 +9,7 @@ class CollectImageBj:
 
     def __init__(self):
 
-        self.store_path = "D:\\DATA\\bj-jpeg"
+        self.store_path = "C:\\mydata\\bj-jpeg"
 
         self.bj_dao = db.bj.BjDao()
         self.bjs = self.bj_dao.get_where_agreement('WHERE is_downloads IS NULL OR is_downloads = 0 ORDER BY post_date')

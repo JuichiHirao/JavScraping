@@ -548,8 +548,8 @@ class EntryRegisterJav2:
 
 if __name__ == '__main__':
     jav2 = EntryRegisterJav2()
-    # jav2.main()
-    # jav2.main2()
-    # jav2.main3()
-    jav2.main4()
+    jav2.main()
+    jav2.main2()
+    # jav2.main3() hd-auto (旧hd-blog)
+    jav2.main4() # hd-blog
 

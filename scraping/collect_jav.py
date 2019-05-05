@@ -4,6 +4,7 @@ from datetime import datetime
 import urllib.request
 import re
 import os
+import selenium.common.exceptions
 from bs4 import BeautifulSoup
 from javcore import db
 from javcore import common
@@ -218,7 +219,14 @@ class CollectJav:
 
     def __download_image(self, driver, link):
 
-        thumbnail_url = driver.find_element_by_id('image').get_attribute('src')
+        thumbnail_url = ''
+        try:
+            image_id = driver.find_element_by_id('image')
+        except selenium.common.exceptions.NoSuchElementException:
+            image_id = driver.find_element_by_tag_name('img')
+
+        if image_id is not None:
+            thumbnail_url = image_id.get_attribute('src')
 
         filename = link[link.rfind("/") + 1:]
         pathname = os.path.join(self.store_path, filename)
