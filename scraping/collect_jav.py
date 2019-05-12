@@ -78,21 +78,25 @@ class CollectJav:
 
             file_info_list = []
             for movie_link in page_data.movie_links:
-                with urllib.request.urlopen(movie_link) as response:
-                    html = response.read()
-                    html_soup = BeautifulSoup(html, "html.parser")
-                    file_div = html_soup.find('div', class_='btm')
-                    strong_list = file_div.find_all('strong')
-                    file_size = ''
-                    for data in strong_list:
-                        if re.search('[0-9\.]{1,10}[\sMGB]*', data.text):
-                            file_size = data.text
-                            break
+                try:
+                    with urllib.request.urlopen(movie_link) as response:
+                        html = response.read()
+                        html_soup = BeautifulSoup(html, "html.parser")
+                        file_div = html_soup.find('div', class_='btm')
+                        strong_list = file_div.find_all('strong')
+                        file_size = ''
+                        for data in strong_list:
+                            if re.search('[0-9\.]{1,10}[\sMGB]*', data.text):
+                                file_size = data.text
+                                break
 
-                    filename = file_div.find('a').text.strip()
+                        filename = file_div.find('a').text.strip()
 
-                    file_info_list.append(filename + ' - ' + file_size)
-                    # print(file_size + ' ' + filename + ' ' + movie_link)
+                        file_info_list.append(filename + ' - ' + file_size)
+                        # print(file_size + ' ' + filename + ' ' + movie_link)
+                except urllib.error.HTTPError as err:
+                    print(str(err))
+                    return
 
             jav.filesInfo = '、'.join(file_info_list)
             print('file_info')
