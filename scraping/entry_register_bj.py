@@ -29,6 +29,7 @@ class EntryRegisterBj:
             exit(-1)
 
         start = idx = 1
+        exist_count = 1
 
         end = start + 10
         current_url = ''
@@ -61,9 +62,12 @@ class EntryRegisterBj:
                 title_exist = self.bj_dao.is_exist(bj.title)
 
                 if title_exist:
-                    is_stop = True
+                    exist_count = exist_count + 1
+                    if exist_count > 100:
+                        is_stop = True
                     print('title exist ' + bj.title)
-                    break
+                    continue
+                    # break
 
                 if h2.text == self.stop_title:
                     is_stop = True

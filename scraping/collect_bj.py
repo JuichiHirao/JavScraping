@@ -25,12 +25,18 @@ class CollectImageBj:
 
             thumbnail_list = bj.thumbnails.split(' ')
             for thumbnail in thumbnail_list:
+                if len(thumbnail.strip()) <= 0:
+                    print('thumbnailの設定なし id [{}]'.format(bj.id))
+                    continue
 
                 print(thumbnail)
                 try:
                     filename = thumbnail[thumbnail.rfind("/") + 1:]
                     pathname = os.path.join(self.store_path, filename)
+                    sleep(1)
+                    print('start urlretrieve')
                     result = urllib.request.urlretrieve(thumbnail, pathname)
+                    print('end urlretrieve')
                 except:
                     print('error [' + thumbnail + ']')
                     sleep(10)
