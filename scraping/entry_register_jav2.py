@@ -452,7 +452,7 @@ class EntryRegisterJav2:
                             print('exist_max [' + str(self.exist_max) + ']  over')
                             return
 
-                        if self.jav2_dao.is_exist(jav2_data.title):
+                        if self.jav2_dao.is_exist(jav2_data.title, jav2_data.kind):
                             print('title exists [' + jav2_data.title + ']')
                             self.exist_cnt = self.exist_cnt + 1
                             continue
